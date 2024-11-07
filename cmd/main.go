@@ -20,6 +20,7 @@ import (
 )
 
 func main() {
+	// TODO: добавить логгер
 	cfg, err := config.New()
 	if err != nil {
 		log.Fatal(err)

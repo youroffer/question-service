@@ -14,6 +14,7 @@ func (h *Handler) V1CategoriesPost(ctx context.Context, req *api.CategoryInput) 
 		Title: req.GetTitle(),
 	})
 
+	// TODO: добавить обработку ошибок
 	if err != nil {
 		if errors.Is(err, repoerr.ErrCategoryExists) {
 			return &api.V1CategoriesPostBadRequest{

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+
 	api "github.com/himmel520/question-service/api/oas"
 	"github.com/himmel520/question-service/internal/entity"
 	"github.com/himmel520/question-service/internal/infrastructure/repository/repoerr"
@@ -15,13 +16,13 @@ func (h *Handler) V1CategoriesPost(ctx context.Context, req *api.CategoryInput) 
 	})
 
 	// TODO: добавить обработку ошибок
-	if err != nil {
-		if errors.Is(err, repoerr.ErrCategoryExists) {
-			return &api.V1CategoriesPostBadRequest{
-				Message: err.Error()}, nil
-		}
+	switch{
+	case errors.Is(err, repoerr.ErrCategoryExists):
+		return &api.V1CategoriesPostConflict{Message: err.Error()}, nil
+	case err != nil:
+		h.log.Error(err)
 		return nil, err
 	}
 
-	return newCategory.CategoryToApi(), err
+	return newCategory.CategoryToApi(), nil
 }

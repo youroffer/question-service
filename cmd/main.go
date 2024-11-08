@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"log"
+	"flag"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,6 +13,7 @@ import (
 	"github.com/himmel520/question-service/internal/infrastructure/repository/postgres"
 	categoryRepo "github.com/himmel520/question-service/internal/infrastructure/repository/postgres/category"
 	categoryUC "github.com/himmel520/question-service/internal/usecase/category"
+	"github.com/himmel520/question-service/pkg/logger"
 
 	authHandler "github.com/himmel520/question-service/internal/controller/ogen/handler/auth"
 	categoryHandler "github.com/himmel520/question-service/internal/controller/ogen/handler/category"
@@ -20,7 +21,11 @@ import (
 )
 
 func main() {
-	// TODO: добавить логгер
+	logLevel := flag.String("loglevel", "info", "log level: debug, info, warn, error")
+	flag.Parse()
+
+	log := logger.SetupLogger(*logLevel)
+
 	cfg, err := config.New()
 	if err != nil {
 		log.Fatal(err)
@@ -39,7 +44,7 @@ func main() {
 	handler := ogen.NewHandler(ogen.HandlerParams{
 		Auth:     authHandler.New(),
 		Error:    errHandler.New(),
-		Category: categoryHandler.New(categoryUC),
+		Category: categoryHandler.New(categoryUC, log),
 	})
 
 	app, err := ogen.NewServer(handler, cfg.Srv.Addr)

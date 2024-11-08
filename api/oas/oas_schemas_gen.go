@@ -26,7 +26,7 @@ func (s *BearerAuth) SetToken(val string) {
 	s.Token = val
 }
 
-// Ref: #/components/schemas/Category
+// Ref: #
 type Category struct {
 	ID    int    `json:"id"`
 	Title string `json:"title"`
@@ -54,7 +54,7 @@ func (s *Category) SetTitle(val string) {
 
 func (*Category) v1CategoriesPostRes() {}
 
-// Ref: #/components/schemas/CategoryInput
+// Ref: #
 type CategoryInput struct {
 	Title string `json:"title"`
 }
@@ -69,7 +69,7 @@ func (s *CategoryInput) SetTitle(val string) {
 	s.Title = val
 }
 
-// Ref: #/components/schemas/Error
+// Ref: #
 type Error struct {
 	// Error message.
 	Message string       `json:"message"`

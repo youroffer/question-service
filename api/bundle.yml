@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: Uoffer Question API
+  description: question api
+  version: 1.0.0
+servers:
+  - description: local
+    url: /
+  - description: dev
+    url: /
+paths:
+  /v1/categories:
+    post:
+      tags:
+        - categories
+      summary: Добавить категорию
+      description: Создает новую категорию
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/categoryInput'
+      responses:
+        '201':
+          description: Категория успешно добавлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/category'
+        '400':
+          description: Некорректные данные.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Неавторизованный доступ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '409':
+          description: Категория с таким названием уже существует
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        default:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    categoryInput:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 50
+          example: Books
+      required:
+        - title
+    error:
+      type: object
+      required:
+        - message
+        - details
+      properties:
+        message:
+          type: string
+          description: error message
+          example: Invalid
+        details:
+          type: object
+          additionalProperties: true
+    category:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Books
+      required:
+        - id
+        - title

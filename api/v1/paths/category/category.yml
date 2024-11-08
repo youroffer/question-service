@@ -1,0 +1,44 @@
+post:
+  tags:
+    - categories
+  summary: Добавить категорию
+  description: Создает новую категорию
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../../schemas/category/categoryInput.yml"
+  responses:
+    '201':
+      description: Категория успешно добавлена
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/category/category.yml"
+    '400':
+      description: Некорректные данные.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/error.yml"
+    '409':
+      description: Категория с таким названием уже существует
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/error.yml"
+    '401':
+      description: Неавторизованный доступ
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/error.yml"
+    default:
+      description: Неизвестная ошибка
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/error.yml"

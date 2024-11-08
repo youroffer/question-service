@@ -1,18 +1,21 @@
-# openapi: 3.0.3
-# servers:
-#   - description: local
-#     url: /api/v1
-#   - description: dev
-#     url: /
-# info:
-#   title: Uoffer Question API
-#   description: question api
-#   version: 1.0.0
-# paths:
-#   /v1/categories:
-#     $ref: "./paths/categories.yaml"         # Подключаем описание маршрутов
-# components:
-#   schemas:
-#     $ref: "./components/schemas.yaml"      # Подключаем описание схем
-#   responses:
-#     $ref: "./responses/responses.yaml"      # Подключаем описание ответов
+openapi: 3.0.3
+servers:
+  - description: local
+    url: /
+  - description: dev
+    url: /
+info:
+  title: Uoffer Question API
+  description: question api
+  version: 1.0.0
+
+paths:
+  /v1/categories:
+    $ref: "./v1/paths/category/category.yml"        
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

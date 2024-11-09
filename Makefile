@@ -28,7 +28,7 @@ run:
 # COMPOSE
 .PHONY: compose.up
 compose.up:
-	docker compose -f deployments/dev/compose.yml up --build --no-log-prefix --attach question
+	docker compose -f deployments/dev/compose.yml -p question up --build --no-log-prefix --attach question
 
 .PHONY: compose.down
 compose.down:
@@ -40,10 +40,35 @@ migrate.create: $(migrate)
 	$(migrate) create -ext sql -dir $(MIGRATIONS_PATH) $(name) 
 
 .PHONY: migrate.up
-migrate.up: $(migrate)
-	$(migrate) -database $(POSTGRES_CONN) -path $(MIGRATIONS_PATH) up
+migrate.up:
+	docker run \
+		--network media_default \
+		-v `pwd`/$(MIGRATIONS_PATH):/migrations \
+		migrate/migrate \
+		-path=/migrations/ -database $(POSTGRES_CONN) up
 
 .PHONY: migrate.down
-migrate.down: $(migrate)
-	$(migrate) -database $(POSTGRES_CONN) -path $(MIGRATIONS_PATH) down
+migrate.down:
+	docker run --rm \
+		--network media_default \
+		-v `pwd`/migrations:/migrations \
+		migrate/migrate \
+		-path=/migrations -database $(POSTGRES_CONN) down -all
 
+# TEST
+cover-html: ### run test with coverage and open html report
+	go test -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out
+	rm coverage.out
+.PHONY: coverage-html
+
+cover: ### run test with coverage
+	go test -coverprofile=coverage.out ./...
+	go tool cover -func=coverage.out
+	rm coverage.out
+.PHONY: coverage
+
+# ADDITION
+.PHONY: deep
+deep:
+	dep-tree entropy cmd/main.go

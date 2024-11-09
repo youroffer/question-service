@@ -26,7 +26,7 @@ run:
 # COMPOSE
 .PHONY: compose.up
 compose.up:
-	docker compose -f deployments/dev/compose.yml -p question up --build --no-log-prefix --attach question
+	docker compose -f deployments/dev/compose.yml -p question up --build --no-log-prefix
 
 .PHONY: compose.down
 compose.down:
@@ -41,9 +41,9 @@ migrate.create: $(migrate)
 migrate.up:
 	docker run \
 		--network question_default \
-		-v `pwd`/$(MIGRATIONS_PATH):/migrations \
+		-v `pwd`/migrations:/migrations \
 		migrate/migrate \
-		-path=/migrations/ -database $(POSTGRES_CONN) up
+		-path=/migrations -database $(POSTGRES_CONN) up
 
 .PHONY: migrate.down
 migrate.down:

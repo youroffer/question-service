@@ -6,6 +6,10 @@ properties:
   title:
     type: string
     example: "Books"
+  public:
+    type: boolean
+    example: true
 required:
   - id
   - title
+  - public

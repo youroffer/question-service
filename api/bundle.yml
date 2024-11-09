@@ -189,6 +189,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+        '409':
+          description: Нельзя удалить категорию, так как на нее ссылаются должности
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
         default:
           description: Неизвестная ошибка
           content:
@@ -224,9 +230,13 @@ components:
         title:
           type: string
           example: Books
+        public:
+          type: boolean
+          example: true
       required:
         - id
         - title
+        - public
     categoriesResponse:
       type: object
       properties:
@@ -255,5 +265,9 @@ components:
           type: string
           maxLength: 50
           example: Books
+        public:
+          type: boolean
+          example: true
       required:
         - title
+        - public

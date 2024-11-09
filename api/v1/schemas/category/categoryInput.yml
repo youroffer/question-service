@@ -4,5 +4,9 @@ properties:
     type: string
     maxLength: 50
     example: "Books"
+  public:
+    type: boolean
+    example: true
 required:
   - title
+  - public

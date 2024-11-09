@@ -78,8 +78,9 @@ func (*CategoriesResponse) v1AdminCategoriesGetRes() {}
 
 // Ref: #
 type Category struct {
-	ID    int    `json:"id"`
-	Title string `json:"title"`
+	ID     int    `json:"id"`
+	Title  string `json:"title"`
+	Public bool   `json:"public"`
 }
 
 // GetID returns the value of ID.
@@ -92,6 +93,11 @@ func (s *Category) GetTitle() string {
 	return s.Title
 }
 
+// GetPublic returns the value of Public.
+func (s *Category) GetPublic() bool {
+	return s.Public
+}
+
 // SetID sets the value of ID.
 func (s *Category) SetID(val int) {
 	s.ID = val
@@ -102,12 +108,18 @@ func (s *Category) SetTitle(val string) {
 	s.Title = val
 }
 
+// SetPublic sets the value of Public.
+func (s *Category) SetPublic(val bool) {
+	s.Public = val
+}
+
 func (*Category) v1AdminCategoriesPostRes() {}
 func (*Category) v1AdminCategoriesPutRes()  {}
 
 // Ref: #
 type CategoryInput struct {
-	Title string `json:"title"`
+	Title  string `json:"title"`
+	Public bool   `json:"public"`
 }
 
 // GetTitle returns the value of Title.
@@ -115,9 +127,19 @@ func (s *CategoryInput) GetTitle() string {
 	return s.Title
 }
 
+// GetPublic returns the value of Public.
+func (s *CategoryInput) GetPublic() bool {
+	return s.Public
+}
+
 // SetTitle sets the value of Title.
 func (s *CategoryInput) SetTitle(val string) {
 	s.Title = val
+}
+
+// SetPublic sets the value of Public.
+func (s *CategoryInput) SetPublic(val bool) {
+	s.Public = val
 }
 
 // Ref: #
@@ -229,6 +251,10 @@ func (o OptInt) Or(d int) int {
 	}
 	return d
 }
+
+type V1AdminCategoriesDeleteConflict Error
+
+func (*V1AdminCategoriesDeleteConflict) v1AdminCategoriesDeleteRes() {}
 
 // V1AdminCategoriesDeleteNoContent is response for V1AdminCategoriesDelete operation.
 type V1AdminCategoriesDeleteNoContent struct{}

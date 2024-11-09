@@ -22,7 +22,10 @@ type (
 	}
 
 	Category interface {
-		V1CategoriesPost(ctx context.Context, req *api.CategoryInput) (api.V1CategoriesPostRes, error)
+		V1AdminCategoriesGet(ctx context.Context, params api.V1AdminCategoriesGetParams) (api.V1AdminCategoriesGetRes, error)
+		V1AdminCategoriesPost(ctx context.Context, req *api.CategoryInput) (api.V1AdminCategoriesPostRes, error)
+		V1AdminCategoriesDelete(ctx context.Context, params api.V1AdminCategoriesDeleteParams) (api.V1AdminCategoriesDeleteRes, error)
+		V1AdminCategoriesPut(ctx context.Context, req *api.CategoryInput) (api.V1AdminCategoriesPutRes, error)
 	}
 )
 

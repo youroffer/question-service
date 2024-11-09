@@ -5,8 +5,6 @@ TOOLS_PATH=bin/tools
 migrate=$(TOOLS_PATH)/migrate
 ogen=$(TOOLS_PATH)/ogen
 
-MIGRATIONS_PATH=migrations
-
 $(migrate):
 	GOBIN=`pwd`/$(TOOLS_PATH) go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
@@ -42,7 +40,7 @@ migrate.create: $(migrate)
 .PHONY: migrate.up
 migrate.up:
 	docker run \
-		--network media_default \
+		--network question_default \
 		-v `pwd`/$(MIGRATIONS_PATH):/migrations \
 		migrate/migrate \
 		-path=/migrations/ -database $(POSTGRES_CONN) up
@@ -50,7 +48,7 @@ migrate.up:
 .PHONY: migrate.down
 migrate.down:
 	docker run --rm \
-		--network media_default \
+		--network question_default \
 		-v `pwd`/migrations:/migrations \
 		migrate/migrate \
 		-path=/migrations -database $(POSTGRES_CONN) down -all

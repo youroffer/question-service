@@ -13,12 +13,40 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
-// V1CategoriesPost implements POST /v1/categories operation.
+// V1AdminCategoriesDelete implements DELETE /v1/admin/categories operation.
+//
+// Удаляет категорию по ее уникальному идентификатору.
+//
+// DELETE /v1/admin/categories
+func (UnimplementedHandler) V1AdminCategoriesDelete(ctx context.Context, params V1AdminCategoriesDeleteParams) (r V1AdminCategoriesDeleteRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// V1AdminCategoriesGet implements GET /v1/admin/categories operation.
+//
+// Возвращает список всех категорий с возможностью
+// пагинации.
+//
+// GET /v1/admin/categories
+func (UnimplementedHandler) V1AdminCategoriesGet(ctx context.Context, params V1AdminCategoriesGetParams) (r V1AdminCategoriesGetRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// V1AdminCategoriesPost implements POST /v1/admin/categories operation.
 //
 // Создает новую категорию.
 //
-// POST /v1/categories
-func (UnimplementedHandler) V1CategoriesPost(ctx context.Context, req *CategoryInput) (r V1CategoriesPostRes, _ error) {
+// POST /v1/admin/categories
+func (UnimplementedHandler) V1AdminCategoriesPost(ctx context.Context, req *CategoryInput) (r V1AdminCategoriesPostRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// V1AdminCategoriesPut implements PUT /v1/admin/categories operation.
+//
+// Обновляет категорию.
+//
+// PUT /v1/admin/categories
+func (UnimplementedHandler) V1AdminCategoriesPut(ctx context.Context, req *CategoryInput) (r V1AdminCategoriesPutRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

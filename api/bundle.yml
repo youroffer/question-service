@@ -9,7 +9,62 @@ servers:
   - description: dev
     url: /
 paths:
-  /v1/categories:
+  /v1/admin/categories:
+    get:
+      tags:
+        - categories
+      summary: Получить все категории
+      description: Возвращает список всех категорий с возможностью пагинации
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Номер страницы для пагинации
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: per_page
+          in: query
+          description: Количество категорий на странице
+          required: false
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+      responses:
+        '200':
+          description: Список категорий успешно получен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/categoriesResponse'
+        '400':
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Неавторизованный доступ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: Категории не найдены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        default:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
     post:
       tags:
         - categories
@@ -54,6 +109,92 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+    put:
+      tags:
+        - categories
+      summary: Обновить категорию
+      description: Обновляет категорию
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/categoryInput'
+      responses:
+        '200':
+          description: Категория успешно обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/category'
+        '400':
+          description: Некорректные данные.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Неавторизованный доступ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: Категория не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '409':
+          description: Категория с таким названием уже существует
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        default:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    delete:
+      tags:
+        - categories
+      summary: Удаление категории
+      description: Удаляет категорию по ее уникальному идентификатору.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: Уникальный идентификатор категории
+      responses:
+        '204':
+          description: Категория успешно удалена
+        '401':
+          description: Неавторизованный доступ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: Категория не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        default:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 components:
   securitySchemes:
     bearerAuth:
@@ -61,15 +202,6 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-    categoryInput:
-      type: object
-      properties:
-        title:
-          type: string
-          maxLength: 50
-          example: Books
-      required:
-        - title
     error:
       type: object
       required:
@@ -94,4 +226,34 @@ components:
           example: Books
       required:
         - id
+        - title
+    categoriesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/category'
+        page:
+          type: integer
+          example: 0
+        pages:
+          type: integer
+          example: 13
+        per_page:
+          type: integer
+          example: 1
+      required:
+        - data
+        - page
+        - pages
+        - per_page
+    categoryInput:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 50
+          example: Books
+      required:
         - title

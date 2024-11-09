@@ -48,9 +48,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/v1/categories"
+		case '/': // Prefix: "/v1/admin/categories"
 			origElem := elem
-			if l := len("/v1/categories"); len(elem) >= l && elem[0:l] == "/v1/categories" {
+			if l := len("/v1/admin/categories"); len(elem) >= l && elem[0:l] == "/v1/admin/categories" {
 				elem = elem[l:]
 			} else {
 				break
@@ -59,10 +59,16 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			if len(elem) == 0 {
 				// Leaf node.
 				switch r.Method {
+				case "DELETE":
+					s.handleV1AdminCategoriesDeleteRequest([0]string{}, elemIsEscaped, w, r)
+				case "GET":
+					s.handleV1AdminCategoriesGetRequest([0]string{}, elemIsEscaped, w, r)
 				case "POST":
-					s.handleV1CategoriesPostRequest([0]string{}, elemIsEscaped, w, r)
+					s.handleV1AdminCategoriesPostRequest([0]string{}, elemIsEscaped, w, r)
+				case "PUT":
+					s.handleV1AdminCategoriesPutRequest([0]string{}, elemIsEscaped, w, r)
 				default:
-					s.notAllowed(w, r, "POST")
+					s.notAllowed(w, r, "DELETE,GET,POST,PUT")
 				}
 
 				return
@@ -149,9 +155,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/v1/categories"
+		case '/': // Prefix: "/v1/admin/categories"
 			origElem := elem
-			if l := len("/v1/categories"); len(elem) >= l && elem[0:l] == "/v1/categories" {
+			if l := len("/v1/admin/categories"); len(elem) >= l && elem[0:l] == "/v1/admin/categories" {
 				elem = elem[l:]
 			} else {
 				break
@@ -160,11 +166,35 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			if len(elem) == 0 {
 				// Leaf node.
 				switch method {
+				case "DELETE":
+					r.name = "V1AdminCategoriesDelete"
+					r.summary = "Удаление категории"
+					r.operationID = ""
+					r.pathPattern = "/v1/admin/categories"
+					r.args = args
+					r.count = 0
+					return r, true
+				case "GET":
+					r.name = "V1AdminCategoriesGet"
+					r.summary = "Получить все категории"
+					r.operationID = ""
+					r.pathPattern = "/v1/admin/categories"
+					r.args = args
+					r.count = 0
+					return r, true
 				case "POST":
-					r.name = "V1CategoriesPost"
+					r.name = "V1AdminCategoriesPost"
 					r.summary = "Добавить категорию"
 					r.operationID = ""
-					r.pathPattern = "/v1/categories"
+					r.pathPattern = "/v1/admin/categories"
+					r.args = args
+					r.count = 0
+					return r, true
+				case "PUT":
+					r.name = "V1AdminCategoriesPut"
+					r.summary = "Обновить категорию"
+					r.operationID = ""
+					r.pathPattern = "/v1/admin/categories"
 					r.args = args
 					r.count = 0
 					return r, true

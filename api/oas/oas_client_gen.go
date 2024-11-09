@@ -15,6 +15,7 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
 	"go.opentelemetry.io/otel/trace"
 
+	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/ogenerrors"
 	"github.com/ogen-go/ogen/uri"
@@ -22,12 +23,31 @@ import (
 
 // Invoker invokes operations described by OpenAPI v3 specification.
 type Invoker interface {
-	// V1CategoriesPost invokes POST /v1/categories operation.
+	// V1AdminCategoriesDelete invokes DELETE /v1/admin/categories operation.
+	//
+	// Удаляет категорию по ее уникальному идентификатору.
+	//
+	// DELETE /v1/admin/categories
+	V1AdminCategoriesDelete(ctx context.Context, params V1AdminCategoriesDeleteParams) (V1AdminCategoriesDeleteRes, error)
+	// V1AdminCategoriesGet invokes GET /v1/admin/categories operation.
+	//
+	// Возвращает список всех категорий с возможностью
+	// пагинации.
+	//
+	// GET /v1/admin/categories
+	V1AdminCategoriesGet(ctx context.Context, params V1AdminCategoriesGetParams) (V1AdminCategoriesGetRes, error)
+	// V1AdminCategoriesPost invokes POST /v1/admin/categories operation.
 	//
 	// Создает новую категорию.
 	//
-	// POST /v1/categories
-	V1CategoriesPost(ctx context.Context, request *CategoryInput) (V1CategoriesPostRes, error)
+	// POST /v1/admin/categories
+	V1AdminCategoriesPost(ctx context.Context, request *CategoryInput) (V1AdminCategoriesPostRes, error)
+	// V1AdminCategoriesPut invokes PUT /v1/admin/categories operation.
+	//
+	// Обновляет категорию.
+	//
+	// PUT /v1/admin/categories
+	V1AdminCategoriesPut(ctx context.Context, request *CategoryInput) (V1AdminCategoriesPutRes, error)
 }
 
 // Client implements OAS client.
@@ -84,20 +104,20 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 	return u
 }
 
-// V1CategoriesPost invokes POST /v1/categories operation.
+// V1AdminCategoriesDelete invokes DELETE /v1/admin/categories operation.
 //
-// Создает новую категорию.
+// Удаляет категорию по ее уникальному идентификатору.
 //
-// POST /v1/categories
-func (c *Client) V1CategoriesPost(ctx context.Context, request *CategoryInput) (V1CategoriesPostRes, error) {
-	res, err := c.sendV1CategoriesPost(ctx, request)
+// DELETE /v1/admin/categories
+func (c *Client) V1AdminCategoriesDelete(ctx context.Context, params V1AdminCategoriesDeleteParams) (V1AdminCategoriesDeleteRes, error) {
+	res, err := c.sendV1AdminCategoriesDelete(ctx, params)
 	return res, err
 }
 
-func (c *Client) sendV1CategoriesPost(ctx context.Context, request *CategoryInput) (res V1CategoriesPostRes, err error) {
+func (c *Client) sendV1AdminCategoriesDelete(ctx context.Context, params V1AdminCategoriesDeleteParams) (res V1AdminCategoriesDeleteRes, err error) {
 	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("POST"),
-		semconv.HTTPRouteKey.String("/v1/categories"),
+		semconv.HTTPRequestMethodKey.String("DELETE"),
+		semconv.HTTPRouteKey.String("/v1/admin/categories"),
 	}
 
 	// Run stopwatch.
@@ -112,7 +132,7 @@ func (c *Client) sendV1CategoriesPost(ctx context.Context, request *CategoryInpu
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1CategoriesPost",
+	ctx, span := c.cfg.Tracer.Start(ctx, "V1AdminCategoriesDelete",
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -130,16 +150,13 @@ func (c *Client) sendV1CategoriesPost(ctx context.Context, request *CategoryInpu
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [1]string
-	pathParts[0] = "/v1/categories"
+	pathParts[0] = "/v1/admin/categories"
 	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "POST", u)
+	r, err := ht.NewRequest(ctx, "DELETE", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
-	}
-	if err := encodeV1CategoriesPostRequest(request, r); err != nil {
-		return res, errors.Wrap(err, "encode request")
 	}
 
 	{
@@ -147,7 +164,7 @@ func (c *Client) sendV1CategoriesPost(ctx context.Context, request *CategoryInpu
 		var satisfied bitset
 		{
 			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, "V1CategoriesPost", r); {
+			switch err := c.securityBearerAuth(ctx, "V1AdminCategoriesDelete", r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
@@ -183,7 +200,364 @@ func (c *Client) sendV1CategoriesPost(ctx context.Context, request *CategoryInpu
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeV1CategoriesPostResponse(resp)
+	result, err := decodeV1AdminCategoriesDeleteResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// V1AdminCategoriesGet invokes GET /v1/admin/categories operation.
+//
+// Возвращает список всех категорий с возможностью
+// пагинации.
+//
+// GET /v1/admin/categories
+func (c *Client) V1AdminCategoriesGet(ctx context.Context, params V1AdminCategoriesGetParams) (V1AdminCategoriesGetRes, error) {
+	res, err := c.sendV1AdminCategoriesGet(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendV1AdminCategoriesGet(ctx context.Context, params V1AdminCategoriesGetParams) (res V1AdminCategoriesGetRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.HTTPRouteKey.String("/v1/admin/categories"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "V1AdminCategoriesGet",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/v1/admin/categories"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeQueryParams"
+	q := uri.NewQueryEncoder()
+	{
+		// Encode "page" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "page",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			if val, ok := params.Page.Get(); ok {
+				return e.EncodeValue(conv.IntToString(val))
+			}
+			return nil
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	{
+		// Encode "per_page" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "per_page",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			if val, ok := params.PerPage.Get(); ok {
+				return e.EncodeValue(conv.IntToString(val))
+			}
+			return nil
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	u.RawQuery = q.Values().Encode()
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, "V1AdminCategoriesGet", r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeV1AdminCategoriesGetResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// V1AdminCategoriesPost invokes POST /v1/admin/categories operation.
+//
+// Создает новую категорию.
+//
+// POST /v1/admin/categories
+func (c *Client) V1AdminCategoriesPost(ctx context.Context, request *CategoryInput) (V1AdminCategoriesPostRes, error) {
+	res, err := c.sendV1AdminCategoriesPost(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendV1AdminCategoriesPost(ctx context.Context, request *CategoryInput) (res V1AdminCategoriesPostRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/v1/admin/categories"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "V1AdminCategoriesPost",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/v1/admin/categories"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeV1AdminCategoriesPostRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, "V1AdminCategoriesPost", r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeV1AdminCategoriesPostResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// V1AdminCategoriesPut invokes PUT /v1/admin/categories operation.
+//
+// Обновляет категорию.
+//
+// PUT /v1/admin/categories
+func (c *Client) V1AdminCategoriesPut(ctx context.Context, request *CategoryInput) (V1AdminCategoriesPutRes, error) {
+	res, err := c.sendV1AdminCategoriesPut(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendV1AdminCategoriesPut(ctx context.Context, request *CategoryInput) (res V1AdminCategoriesPutRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		semconv.HTTPRequestMethodKey.String("PUT"),
+		semconv.HTTPRouteKey.String("/v1/admin/categories"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "V1AdminCategoriesPut",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/v1/admin/categories"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "PUT", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeV1AdminCategoriesPutRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, "V1AdminCategoriesPut", r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeV1AdminCategoriesPutResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

@@ -14,9 +14,13 @@ import (
 func (r *CategoryRepo) Create(ctx context.Context, qe repository.Querier, category *entity.Category) (*entity.Category, error) {
 	query, args, err := squirrel.
 		Insert("categories").
-		Columns("title").
-		Values(category.Title).
-		Suffix("returning id, title").
+		Columns(
+			"title",
+			"public").
+		Values(
+			category.Title,
+			category.Public,).
+		Suffix("returning id, title, public").
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {
@@ -25,7 +29,9 @@ func (r *CategoryRepo) Create(ctx context.Context, qe repository.Querier, catego
 
 	newCategory := &entity.Category{}
 	err = qe.QueryRow(ctx, query, args...).Scan(
-		&newCategory.ID, &newCategory.Title)
+		&newCategory.ID, 
+		&newCategory.Title, 
+		&newCategory.Public)
 
 	var pgErr *pgconn.PgError
 	if errors.As(err, &pgErr) {

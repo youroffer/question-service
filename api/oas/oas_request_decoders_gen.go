@@ -15,7 +15,7 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func (s *Server) decodeV1AdminCategoriesCategoryIDPutRequest(r *http.Request) (
+func (s *Server) decodeV1AdminCategoriesIDPutRequest(r *http.Request) (
 	req *CategoryPut,
 	close func() error,
 	rerr error,

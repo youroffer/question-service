@@ -113,8 +113,8 @@ func (s *Category) SetPublic(val bool) {
 	s.Public = val
 }
 
-func (*Category) v1AdminCategoriesCategoryIDPutRes() {}
-func (*Category) v1AdminCategoriesPostRes()          {}
+func (*Category) v1AdminCategoriesIDPutRes() {}
+func (*Category) v1AdminCategoriesPostRes()  {}
 
 // Ref: #
 type CategoryPost struct {
@@ -370,39 +370,6 @@ func (o OptString) Or(d string) string {
 	return d
 }
 
-type V1AdminCategoriesCategoryIDDeleteConflict Error
-
-func (*V1AdminCategoriesCategoryIDDeleteConflict) v1AdminCategoriesCategoryIDDeleteRes() {}
-
-// V1AdminCategoriesCategoryIDDeleteNoContent is response for V1AdminCategoriesCategoryIDDelete operation.
-type V1AdminCategoriesCategoryIDDeleteNoContent struct{}
-
-func (*V1AdminCategoriesCategoryIDDeleteNoContent) v1AdminCategoriesCategoryIDDeleteRes() {}
-
-type V1AdminCategoriesCategoryIDDeleteNotFound Error
-
-func (*V1AdminCategoriesCategoryIDDeleteNotFound) v1AdminCategoriesCategoryIDDeleteRes() {}
-
-type V1AdminCategoriesCategoryIDDeleteUnauthorized Error
-
-func (*V1AdminCategoriesCategoryIDDeleteUnauthorized) v1AdminCategoriesCategoryIDDeleteRes() {}
-
-type V1AdminCategoriesCategoryIDPutBadRequest Error
-
-func (*V1AdminCategoriesCategoryIDPutBadRequest) v1AdminCategoriesCategoryIDPutRes() {}
-
-type V1AdminCategoriesCategoryIDPutConflict Error
-
-func (*V1AdminCategoriesCategoryIDPutConflict) v1AdminCategoriesCategoryIDPutRes() {}
-
-type V1AdminCategoriesCategoryIDPutNotFound Error
-
-func (*V1AdminCategoriesCategoryIDPutNotFound) v1AdminCategoriesCategoryIDPutRes() {}
-
-type V1AdminCategoriesCategoryIDPutUnauthorized Error
-
-func (*V1AdminCategoriesCategoryIDPutUnauthorized) v1AdminCategoriesCategoryIDPutRes() {}
-
 type V1AdminCategoriesGetBadRequest Error
 
 func (*V1AdminCategoriesGetBadRequest) v1AdminCategoriesGetRes() {}
@@ -414,6 +381,39 @@ func (*V1AdminCategoriesGetNotFound) v1AdminCategoriesGetRes() {}
 type V1AdminCategoriesGetUnauthorized Error
 
 func (*V1AdminCategoriesGetUnauthorized) v1AdminCategoriesGetRes() {}
+
+type V1AdminCategoriesIDDeleteConflict Error
+
+func (*V1AdminCategoriesIDDeleteConflict) v1AdminCategoriesIDDeleteRes() {}
+
+// V1AdminCategoriesIDDeleteNoContent is response for V1AdminCategoriesIDDelete operation.
+type V1AdminCategoriesIDDeleteNoContent struct{}
+
+func (*V1AdminCategoriesIDDeleteNoContent) v1AdminCategoriesIDDeleteRes() {}
+
+type V1AdminCategoriesIDDeleteNotFound Error
+
+func (*V1AdminCategoriesIDDeleteNotFound) v1AdminCategoriesIDDeleteRes() {}
+
+type V1AdminCategoriesIDDeleteUnauthorized Error
+
+func (*V1AdminCategoriesIDDeleteUnauthorized) v1AdminCategoriesIDDeleteRes() {}
+
+type V1AdminCategoriesIDPutBadRequest Error
+
+func (*V1AdminCategoriesIDPutBadRequest) v1AdminCategoriesIDPutRes() {}
+
+type V1AdminCategoriesIDPutConflict Error
+
+func (*V1AdminCategoriesIDPutConflict) v1AdminCategoriesIDPutRes() {}
+
+type V1AdminCategoriesIDPutNotFound Error
+
+func (*V1AdminCategoriesIDPutNotFound) v1AdminCategoriesIDPutRes() {}
+
+type V1AdminCategoriesIDPutUnauthorized Error
+
+func (*V1AdminCategoriesIDPutUnauthorized) v1AdminCategoriesIDPutRes() {}
 
 type V1AdminCategoriesPostBadRequest Error
 

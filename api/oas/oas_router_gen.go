@@ -78,7 +78,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					break
 				}
 
-				// Param: "categoryID"
+				// Param: "id"
 				// Leaf parameter
 				args[0] = elem
 				elem = ""
@@ -87,11 +87,11 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					// Leaf node.
 					switch r.Method {
 					case "DELETE":
-						s.handleV1AdminCategoriesCategoryIDDeleteRequest([1]string{
+						s.handleV1AdminCategoriesIDDeleteRequest([1]string{
 							args[0],
 						}, elemIsEscaped, w, r)
 					case "PUT":
-						s.handleV1AdminCategoriesCategoryIDPutRequest([1]string{
+						s.handleV1AdminCategoriesIDPutRequest([1]string{
 							args[0],
 						}, elemIsEscaped, w, r)
 					default:
@@ -224,7 +224,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					break
 				}
 
-				// Param: "categoryID"
+				// Param: "id"
 				// Leaf parameter
 				args[0] = elem
 				elem = ""
@@ -233,18 +233,18 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					// Leaf node.
 					switch method {
 					case "DELETE":
-						r.name = "V1AdminCategoriesCategoryIDDelete"
+						r.name = "V1AdminCategoriesIDDelete"
 						r.summary = "Удаление категории"
 						r.operationID = ""
-						r.pathPattern = "/v1/admin/categories/{categoryID}"
+						r.pathPattern = "/v1/admin/categories/{id}"
 						r.args = args
 						r.count = 1
 						return r, true
 					case "PUT":
-						r.name = "V1AdminCategoriesCategoryIDPut"
+						r.name = "V1AdminCategoriesIDPut"
 						r.summary = "Обновить категорию"
 						r.operationID = ""
-						r.pathPattern = "/v1/admin/categories/{categoryID}"
+						r.pathPattern = "/v1/admin/categories/{id}"
 						r.args = args
 						r.count = 1
 						return r, true

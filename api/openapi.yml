@@ -12,7 +12,7 @@ info:
 paths:
   /v1/admin/categories:
     $ref: "./v1/paths/admin/category/category.yml"   
-  /v1/admin/categories/{categoryID}:     
+  /v1/admin/categories/{id}:     
     $ref: "./v1/paths/admin/category/category_id.yml"  
 
 components:

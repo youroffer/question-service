@@ -8,18 +8,6 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
-	// V1AdminCategoriesCategoryIDDelete implements DELETE /v1/admin/categories/{categoryID} operation.
-	//
-	// Удаляет категорию по ее уникальному идентификатору.
-	//
-	// DELETE /v1/admin/categories/{categoryID}
-	V1AdminCategoriesCategoryIDDelete(ctx context.Context, params V1AdminCategoriesCategoryIDDeleteParams) (V1AdminCategoriesCategoryIDDeleteRes, error)
-	// V1AdminCategoriesCategoryIDPut implements PUT /v1/admin/categories/{categoryID} operation.
-	//
-	// Обновляет категорию.
-	//
-	// PUT /v1/admin/categories/{categoryID}
-	V1AdminCategoriesCategoryIDPut(ctx context.Context, req *CategoryPut, params V1AdminCategoriesCategoryIDPutParams) (V1AdminCategoriesCategoryIDPutRes, error)
 	// V1AdminCategoriesGet implements GET /v1/admin/categories operation.
 	//
 	// Возвращает список всех категорий с возможностью
@@ -27,6 +15,18 @@ type Handler interface {
 	//
 	// GET /v1/admin/categories
 	V1AdminCategoriesGet(ctx context.Context, params V1AdminCategoriesGetParams) (V1AdminCategoriesGetRes, error)
+	// V1AdminCategoriesIDDelete implements DELETE /v1/admin/categories/{id} operation.
+	//
+	// Удаляет категорию по ее уникальному идентификатору.
+	//
+	// DELETE /v1/admin/categories/{id}
+	V1AdminCategoriesIDDelete(ctx context.Context, params V1AdminCategoriesIDDeleteParams) (V1AdminCategoriesIDDeleteRes, error)
+	// V1AdminCategoriesIDPut implements PUT /v1/admin/categories/{id} operation.
+	//
+	// Обновляет категорию.
+	//
+	// PUT /v1/admin/categories/{id}
+	V1AdminCategoriesIDPut(ctx context.Context, req *CategoryPut, params V1AdminCategoriesIDPutParams) (V1AdminCategoriesIDPutRes, error)
 	// V1AdminCategoriesPost implements POST /v1/admin/categories operation.
 	//
 	// Создает новую категорию.

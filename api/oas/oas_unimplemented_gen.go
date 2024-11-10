@@ -13,24 +13,6 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
-// V1AdminCategoriesCategoryIDDelete implements DELETE /v1/admin/categories/{categoryID} operation.
-//
-// Удаляет категорию по ее уникальному идентификатору.
-//
-// DELETE /v1/admin/categories/{categoryID}
-func (UnimplementedHandler) V1AdminCategoriesCategoryIDDelete(ctx context.Context, params V1AdminCategoriesCategoryIDDeleteParams) (r V1AdminCategoriesCategoryIDDeleteRes, _ error) {
-	return r, ht.ErrNotImplemented
-}
-
-// V1AdminCategoriesCategoryIDPut implements PUT /v1/admin/categories/{categoryID} operation.
-//
-// Обновляет категорию.
-//
-// PUT /v1/admin/categories/{categoryID}
-func (UnimplementedHandler) V1AdminCategoriesCategoryIDPut(ctx context.Context, req *CategoryPut, params V1AdminCategoriesCategoryIDPutParams) (r V1AdminCategoriesCategoryIDPutRes, _ error) {
-	return r, ht.ErrNotImplemented
-}
-
 // V1AdminCategoriesGet implements GET /v1/admin/categories operation.
 //
 // Возвращает список всех категорий с возможностью
@@ -38,6 +20,24 @@ func (UnimplementedHandler) V1AdminCategoriesCategoryIDPut(ctx context.Context, 
 //
 // GET /v1/admin/categories
 func (UnimplementedHandler) V1AdminCategoriesGet(ctx context.Context, params V1AdminCategoriesGetParams) (r V1AdminCategoriesGetRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// V1AdminCategoriesIDDelete implements DELETE /v1/admin/categories/{id} operation.
+//
+// Удаляет категорию по ее уникальному идентификатору.
+//
+// DELETE /v1/admin/categories/{id}
+func (UnimplementedHandler) V1AdminCategoriesIDDelete(ctx context.Context, params V1AdminCategoriesIDDeleteParams) (r V1AdminCategoriesIDDeleteRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// V1AdminCategoriesIDPut implements PUT /v1/admin/categories/{id} operation.
+//
+// Обновляет категорию.
+//
+// PUT /v1/admin/categories/{id}
+func (UnimplementedHandler) V1AdminCategoriesIDPut(ctx context.Context, req *CategoryPut, params V1AdminCategoriesIDPutParams) (r V1AdminCategoriesIDPutRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

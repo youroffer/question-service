@@ -11,7 +11,7 @@ import (
 	ht "github.com/ogen-go/ogen/http"
 )
 
-func encodeV1AdminCategoriesCategoryIDPutRequest(
+func encodeV1AdminCategoriesIDPutRequest(
 	req *CategoryPut,
 	r *http.Request,
 ) error {

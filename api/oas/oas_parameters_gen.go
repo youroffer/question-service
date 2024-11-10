@@ -15,172 +15,6 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-// V1AdminCategoriesCategoryIDDeleteParams is parameters of DELETE /v1/admin/categories/{categoryID} operation.
-type V1AdminCategoriesCategoryIDDeleteParams struct {
-	// Уникальный идентификатор категории.
-	CategoryID int
-}
-
-func unpackV1AdminCategoriesCategoryIDDeleteParams(packed middleware.Parameters) (params V1AdminCategoriesCategoryIDDeleteParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "categoryID",
-			In:   "path",
-		}
-		params.CategoryID = packed[key].(int)
-	}
-	return params
-}
-
-func decodeV1AdminCategoriesCategoryIDDeleteParams(args [1]string, argsEscaped bool, r *http.Request) (params V1AdminCategoriesCategoryIDDeleteParams, _ error) {
-	// Decode path: categoryID.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "categoryID",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToInt(val)
-				if err != nil {
-					return err
-				}
-
-				params.CategoryID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-			if err := func() error {
-				if err := (validate.Int{
-					MinSet:        true,
-					Min:           1,
-					MaxSet:        false,
-					Max:           0,
-					MinExclusive:  false,
-					MaxExclusive:  false,
-					MultipleOfSet: false,
-					MultipleOf:    0,
-				}).Validate(int64(params.CategoryID)); err != nil {
-					return errors.Wrap(err, "int")
-				}
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "categoryID",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// V1AdminCategoriesCategoryIDPutParams is parameters of PUT /v1/admin/categories/{categoryID} operation.
-type V1AdminCategoriesCategoryIDPutParams struct {
-	// Уникальный идентификатор категории.
-	CategoryID int
-}
-
-func unpackV1AdminCategoriesCategoryIDPutParams(packed middleware.Parameters) (params V1AdminCategoriesCategoryIDPutParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "categoryID",
-			In:   "path",
-		}
-		params.CategoryID = packed[key].(int)
-	}
-	return params
-}
-
-func decodeV1AdminCategoriesCategoryIDPutParams(args [1]string, argsEscaped bool, r *http.Request) (params V1AdminCategoriesCategoryIDPutParams, _ error) {
-	// Decode path: categoryID.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "categoryID",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToInt(val)
-				if err != nil {
-					return err
-				}
-
-				params.CategoryID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-			if err := func() error {
-				if err := (validate.Int{
-					MinSet:        true,
-					Min:           1,
-					MaxSet:        false,
-					Max:           0,
-					MinExclusive:  false,
-					MaxExclusive:  false,
-					MultipleOfSet: false,
-					MultipleOf:    0,
-				}).Validate(int64(params.CategoryID)); err != nil {
-					return errors.Wrap(err, "int")
-				}
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "categoryID",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
 // V1AdminCategoriesGetParams is parameters of GET /v1/admin/categories operation.
 type V1AdminCategoriesGetParams struct {
 	// Номер страницы для пагинации.
@@ -350,6 +184,172 @@ func decodeV1AdminCategoriesGetParams(args [0]string, argsEscaped bool, r *http.
 		return params, &ogenerrors.DecodeParamError{
 			Name: "per_page",
 			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// V1AdminCategoriesIDDeleteParams is parameters of DELETE /v1/admin/categories/{id} operation.
+type V1AdminCategoriesIDDeleteParams struct {
+	// Уникальный идентификатор категории.
+	ID int
+}
+
+func unpackV1AdminCategoriesIDDeleteParams(packed middleware.Parameters) (params V1AdminCategoriesIDDeleteParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(int)
+	}
+	return params
+}
+
+func decodeV1AdminCategoriesIDDeleteParams(args [1]string, argsEscaped bool, r *http.Request) (params V1AdminCategoriesIDDeleteParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := (validate.Int{
+					MinSet:        true,
+					Min:           1,
+					MaxSet:        false,
+					Max:           0,
+					MinExclusive:  false,
+					MaxExclusive:  false,
+					MultipleOfSet: false,
+					MultipleOf:    0,
+				}).Validate(int64(params.ID)); err != nil {
+					return errors.Wrap(err, "int")
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// V1AdminCategoriesIDPutParams is parameters of PUT /v1/admin/categories/{id} operation.
+type V1AdminCategoriesIDPutParams struct {
+	// Уникальный идентификатор категории.
+	ID int
+}
+
+func unpackV1AdminCategoriesIDPutParams(packed middleware.Parameters) (params V1AdminCategoriesIDPutParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(int)
+	}
+	return params
+}
+
+func decodeV1AdminCategoriesIDPutParams(args [1]string, argsEscaped bool, r *http.Request) (params V1AdminCategoriesIDPutParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := (validate.Int{
+					MinSet:        true,
+					Min:           1,
+					MaxSet:        false,
+					Max:           0,
+					MinExclusive:  false,
+					MaxExclusive:  false,
+					MultipleOfSet: false,
+					MultipleOf:    0,
+				}).Validate(int64(params.ID)); err != nil {
+					return errors.Wrap(err, "int")
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
 			Err:  err,
 		}
 	}

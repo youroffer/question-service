@@ -109,7 +109,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-  /v1/admin/categories/{categoryID}:
+  /v1/admin/categories/{id}:
     put:
       tags:
         - categories
@@ -119,7 +119,7 @@ paths:
         - bearerAuth: []
       parameters:
         - in: path
-          name: categoryID
+          name: id
           schema:
             type: integer
             minimum: 1
@@ -177,7 +177,7 @@ paths:
         - bearerAuth: []
       parameters:
         - in: path
-          name: categoryID
+          name: id
           schema:
             type: integer
             minimum: 1

@@ -8,7 +8,7 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func (s *CategoriesResponse) Validate() error {
+func (s *CategoriesResp) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
 	}
@@ -31,7 +31,7 @@ func (s *CategoriesResponse) Validate() error {
 	return nil
 }
 
-func (s *CategoryInput) Validate() error {
+func (s *CategoryPost) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
 	}
@@ -39,8 +39,8 @@ func (s *CategoryInput) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.String{
-			MinLength:    0,
-			MinLengthSet: false,
+			MinLength:    3,
+			MinLengthSet: true,
 			MaxLength:    50,
 			MaxLengthSet: true,
 			Email:        false,
@@ -48,6 +48,44 @@ func (s *CategoryInput) Validate() error {
 			Regex:        nil,
 		}).Validate(string(s.Title)); err != nil {
 			return errors.Wrap(err, "string")
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "title",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+
+func (s *CategoryPut) Validate() error {
+	if s == nil {
+		return validate.ErrNilPointer
+	}
+
+	var failures []validate.FieldError
+	if err := func() error {
+		if value, ok := s.Title.Get(); ok {
+			if err := func() error {
+				if err := (validate.String{
+					MinLength:    3,
+					MinLengthSet: true,
+					MaxLength:    50,
+					MaxLengthSet: true,
+					Email:        false,
+					Hostname:     false,
+					Regex:        nil,
+				}).Validate(string(value)); err != nil {
+					return errors.Wrap(err, "string")
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
 		}
 		return nil
 	}(); err != nil {

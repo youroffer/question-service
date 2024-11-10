@@ -11,7 +11,9 @@ info:
 
 paths:
   /v1/admin/categories:
-    $ref: "./v1/paths/admin/category/category.yml"        
+    $ref: "./v1/paths/admin/category/category.yml"   
+  /v1/admin/categories/{categoryID}:     
+    $ref: "./v1/paths/admin/category/category_id.yml"  
 
 components:
   securitySchemes:

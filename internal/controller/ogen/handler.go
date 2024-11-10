@@ -23,9 +23,9 @@ type (
 
 	Category interface {
 		V1AdminCategoriesGet(ctx context.Context, params api.V1AdminCategoriesGetParams) (api.V1AdminCategoriesGetRes, error)
-		V1AdminCategoriesPost(ctx context.Context, req *api.CategoryInput) (api.V1AdminCategoriesPostRes, error)
-		V1AdminCategoriesDelete(ctx context.Context, params api.V1AdminCategoriesDeleteParams) (api.V1AdminCategoriesDeleteRes, error)
-		V1AdminCategoriesPut(ctx context.Context, req *api.CategoryInput) (api.V1AdminCategoriesPutRes, error)
+		V1AdminCategoriesPost(ctx context.Context, req *api.CategoryPost) (api.V1AdminCategoriesPostRes, error)
+		V1AdminCategoriesCategoryIDDelete(ctx context.Context, params api.V1AdminCategoriesCategoryIDDeleteParams) (api.V1AdminCategoriesCategoryIDDeleteRes, error)
+		V1AdminCategoriesCategoryIDPut(ctx context.Context, req *api.CategoryPut, params api.V1AdminCategoriesCategoryIDPutParams) (api.V1AdminCategoriesCategoryIDPutRes, error)
 	}
 )
 

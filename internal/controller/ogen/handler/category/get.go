@@ -7,5 +7,5 @@ import (
 )
 
 func (h *Handler) V1AdminCategoriesGet(ctx context.Context, params api.V1AdminCategoriesGetParams) (api.V1AdminCategoriesGetRes, error) {
-	return &api.CategoriesResponse{}, nil
+	return &api.CategoriesResp{}, nil
 }

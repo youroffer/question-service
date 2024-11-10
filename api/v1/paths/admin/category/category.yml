@@ -28,7 +28,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../../../schemas/category/categoriesResponse.yml"
+            $ref: "../../../schemas/category/categoriesResp.yml"
     '400':
       description: Некорректные параметры запроса
       content:
@@ -66,7 +66,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: "../../../schemas/category/categoryInput.yml"
+          $ref: "../../../schemas/category/categoryPost.yml"
   responses:
     '201':
       description: Категория успешно добавлена
@@ -82,100 +82,6 @@ post:
             $ref: "../../../schemas/error.yml"
     '409':
       description: Категория с таким названием уже существует
-      content:
-        application/json:
-          schema:
-            $ref: "../../../schemas/error.yml"
-    '401':
-      description: Неавторизованный доступ
-      content:
-        application/json:
-          schema:
-            $ref: "../../../schemas/error.yml"
-    default:
-      description: Неизвестная ошибка
-      content:
-        application/json:
-          schema:
-            $ref: "../../../schemas/error.yml"
-
-put:
-  tags:
-    - categories
-  summary: Обновить категорию
-  description: Обновляет категорию
-  security:
-    - bearerAuth: []
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: "../../../schemas/category/categoryInput.yml"
-  responses:
-    '200':
-      description: Категория успешно обновлена
-      content:
-        application/json:
-          schema:
-            $ref: "../../../schemas/category/category.yml"
-    '400':
-      description: Некорректные данные.
-      content:
-        application/json:
-          schema:
-            $ref: "../../../schemas/error.yml"
-    '404':
-      description: Категория не найдена
-      content:
-        application/json:
-          schema:
-            $ref: "../../../schemas/error.yml"
-    '409':
-      description: Категория с таким названием уже существует
-      content:
-        application/json:
-          schema:
-            $ref: "../../../schemas/error.yml"
-    '401':
-      description: Неавторизованный доступ
-      content:
-        application/json:
-          schema:
-            $ref: "../../../schemas/error.yml"
-    default:
-      description: Неизвестная ошибка
-      content:
-        application/json:
-          schema:
-            $ref: "../../../schemas/error.yml"
-
-delete:
-  tags:
-    - categories
-  summary: Удаление категории
-  description: Удаляет категорию по ее уникальному идентификатору.
-  security:
-    - bearerAuth: []
-  parameters:
-    - in: path
-      name: id
-      schema:
-        type: integer
-        minimum: 1
-      required: true
-      description: Уникальный идентификатор категории
-  responses:
-    '204':
-      description: Категория успешно удалена
-    '404':
-      description: Категория не найдена
-      content:
-        application/json:
-          schema:
-            $ref: "../../../schemas/error.yml"
-    '409':
-      description: Нельзя удалить категорию, так как на нее ссылаются должности
       content:
         application/json:
           schema:

@@ -27,7 +27,7 @@ func (s *BearerAuth) SetToken(val string) {
 }
 
 // Ref: #
-type CategoriesResponse struct {
+type CategoriesResp struct {
 	Data    []Category `json:"data"`
 	Page    int        `json:"page"`
 	Pages   int        `json:"pages"`
@@ -35,46 +35,46 @@ type CategoriesResponse struct {
 }
 
 // GetData returns the value of Data.
-func (s *CategoriesResponse) GetData() []Category {
+func (s *CategoriesResp) GetData() []Category {
 	return s.Data
 }
 
 // GetPage returns the value of Page.
-func (s *CategoriesResponse) GetPage() int {
+func (s *CategoriesResp) GetPage() int {
 	return s.Page
 }
 
 // GetPages returns the value of Pages.
-func (s *CategoriesResponse) GetPages() int {
+func (s *CategoriesResp) GetPages() int {
 	return s.Pages
 }
 
 // GetPerPage returns the value of PerPage.
-func (s *CategoriesResponse) GetPerPage() int {
+func (s *CategoriesResp) GetPerPage() int {
 	return s.PerPage
 }
 
 // SetData sets the value of Data.
-func (s *CategoriesResponse) SetData(val []Category) {
+func (s *CategoriesResp) SetData(val []Category) {
 	s.Data = val
 }
 
 // SetPage sets the value of Page.
-func (s *CategoriesResponse) SetPage(val int) {
+func (s *CategoriesResp) SetPage(val int) {
 	s.Page = val
 }
 
 // SetPages sets the value of Pages.
-func (s *CategoriesResponse) SetPages(val int) {
+func (s *CategoriesResp) SetPages(val int) {
 	s.Pages = val
 }
 
 // SetPerPage sets the value of PerPage.
-func (s *CategoriesResponse) SetPerPage(val int) {
+func (s *CategoriesResp) SetPerPage(val int) {
 	s.PerPage = val
 }
 
-func (*CategoriesResponse) v1AdminCategoriesGetRes() {}
+func (*CategoriesResp) v1AdminCategoriesGetRes() {}
 
 // Ref: #
 type Category struct {
@@ -113,32 +113,58 @@ func (s *Category) SetPublic(val bool) {
 	s.Public = val
 }
 
-func (*Category) v1AdminCategoriesPostRes() {}
-func (*Category) v1AdminCategoriesPutRes()  {}
+func (*Category) v1AdminCategoriesCategoryIDPutRes() {}
+func (*Category) v1AdminCategoriesPostRes()          {}
 
 // Ref: #
-type CategoryInput struct {
+type CategoryPost struct {
 	Title  string `json:"title"`
 	Public bool   `json:"public"`
 }
 
 // GetTitle returns the value of Title.
-func (s *CategoryInput) GetTitle() string {
+func (s *CategoryPost) GetTitle() string {
 	return s.Title
 }
 
 // GetPublic returns the value of Public.
-func (s *CategoryInput) GetPublic() bool {
+func (s *CategoryPost) GetPublic() bool {
 	return s.Public
 }
 
 // SetTitle sets the value of Title.
-func (s *CategoryInput) SetTitle(val string) {
+func (s *CategoryPost) SetTitle(val string) {
 	s.Title = val
 }
 
 // SetPublic sets the value of Public.
-func (s *CategoryInput) SetPublic(val bool) {
+func (s *CategoryPost) SetPublic(val bool) {
+	s.Public = val
+}
+
+// Ref: #
+type CategoryPut struct {
+	Title  OptString `json:"title"`
+	Public OptBool   `json:"public"`
+}
+
+// GetTitle returns the value of Title.
+func (s *CategoryPut) GetTitle() OptString {
+	return s.Title
+}
+
+// GetPublic returns the value of Public.
+func (s *CategoryPut) GetPublic() OptBool {
+	return s.Public
+}
+
+// SetTitle sets the value of Title.
+func (s *CategoryPut) SetTitle(val OptString) {
+	s.Title = val
+}
+
+// SetPublic sets the value of Public.
+func (s *CategoryPut) SetPublic(val OptBool) {
 	s.Public = val
 }
 
@@ -206,6 +232,52 @@ func (s *ErrorStatusCode) SetResponse(val Error) {
 	s.Response = val
 }
 
+// NewOptBool returns new OptBool with value set to v.
+func NewOptBool(v bool) OptBool {
+	return OptBool{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptBool is optional bool.
+type OptBool struct {
+	Value bool
+	Set   bool
+}
+
+// IsSet returns true if OptBool was set.
+func (o OptBool) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptBool) Reset() {
+	var v bool
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptBool) SetTo(v bool) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptBool) Get() (v bool, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptBool) Or(d bool) bool {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptInt returns new OptInt with value set to v.
 func NewOptInt(v int) OptInt {
 	return OptInt{
@@ -252,22 +324,84 @@ func (o OptInt) Or(d int) int {
 	return d
 }
 
-type V1AdminCategoriesDeleteConflict Error
+// NewOptString returns new OptString with value set to v.
+func NewOptString(v string) OptString {
+	return OptString{
+		Value: v,
+		Set:   true,
+	}
+}
 
-func (*V1AdminCategoriesDeleteConflict) v1AdminCategoriesDeleteRes() {}
+// OptString is optional string.
+type OptString struct {
+	Value string
+	Set   bool
+}
 
-// V1AdminCategoriesDeleteNoContent is response for V1AdminCategoriesDelete operation.
-type V1AdminCategoriesDeleteNoContent struct{}
+// IsSet returns true if OptString was set.
+func (o OptString) IsSet() bool { return o.Set }
 
-func (*V1AdminCategoriesDeleteNoContent) v1AdminCategoriesDeleteRes() {}
+// Reset unsets value.
+func (o *OptString) Reset() {
+	var v string
+	o.Value = v
+	o.Set = false
+}
 
-type V1AdminCategoriesDeleteNotFound Error
+// SetTo sets value to v.
+func (o *OptString) SetTo(v string) {
+	o.Set = true
+	o.Value = v
+}
 
-func (*V1AdminCategoriesDeleteNotFound) v1AdminCategoriesDeleteRes() {}
+// Get returns value and boolean that denotes whether value was set.
+func (o OptString) Get() (v string, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
 
-type V1AdminCategoriesDeleteUnauthorized Error
+// Or returns value if set, or given parameter if does not.
+func (o OptString) Or(d string) string {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
 
-func (*V1AdminCategoriesDeleteUnauthorized) v1AdminCategoriesDeleteRes() {}
+type V1AdminCategoriesCategoryIDDeleteConflict Error
+
+func (*V1AdminCategoriesCategoryIDDeleteConflict) v1AdminCategoriesCategoryIDDeleteRes() {}
+
+// V1AdminCategoriesCategoryIDDeleteNoContent is response for V1AdminCategoriesCategoryIDDelete operation.
+type V1AdminCategoriesCategoryIDDeleteNoContent struct{}
+
+func (*V1AdminCategoriesCategoryIDDeleteNoContent) v1AdminCategoriesCategoryIDDeleteRes() {}
+
+type V1AdminCategoriesCategoryIDDeleteNotFound Error
+
+func (*V1AdminCategoriesCategoryIDDeleteNotFound) v1AdminCategoriesCategoryIDDeleteRes() {}
+
+type V1AdminCategoriesCategoryIDDeleteUnauthorized Error
+
+func (*V1AdminCategoriesCategoryIDDeleteUnauthorized) v1AdminCategoriesCategoryIDDeleteRes() {}
+
+type V1AdminCategoriesCategoryIDPutBadRequest Error
+
+func (*V1AdminCategoriesCategoryIDPutBadRequest) v1AdminCategoriesCategoryIDPutRes() {}
+
+type V1AdminCategoriesCategoryIDPutConflict Error
+
+func (*V1AdminCategoriesCategoryIDPutConflict) v1AdminCategoriesCategoryIDPutRes() {}
+
+type V1AdminCategoriesCategoryIDPutNotFound Error
+
+func (*V1AdminCategoriesCategoryIDPutNotFound) v1AdminCategoriesCategoryIDPutRes() {}
+
+type V1AdminCategoriesCategoryIDPutUnauthorized Error
+
+func (*V1AdminCategoriesCategoryIDPutUnauthorized) v1AdminCategoriesCategoryIDPutRes() {}
 
 type V1AdminCategoriesGetBadRequest Error
 
@@ -292,19 +426,3 @@ func (*V1AdminCategoriesPostConflict) v1AdminCategoriesPostRes() {}
 type V1AdminCategoriesPostUnauthorized Error
 
 func (*V1AdminCategoriesPostUnauthorized) v1AdminCategoriesPostRes() {}
-
-type V1AdminCategoriesPutBadRequest Error
-
-func (*V1AdminCategoriesPutBadRequest) v1AdminCategoriesPutRes() {}
-
-type V1AdminCategoriesPutConflict Error
-
-func (*V1AdminCategoriesPutConflict) v1AdminCategoriesPutRes() {}
-
-type V1AdminCategoriesPutNotFound Error
-
-func (*V1AdminCategoriesPutNotFound) v1AdminCategoriesPutRes() {}
-
-type V1AdminCategoriesPutUnauthorized Error
-
-func (*V1AdminCategoriesPutUnauthorized) v1AdminCategoriesPutRes() {}

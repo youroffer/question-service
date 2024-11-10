@@ -20,6 +20,7 @@ type (
 
 	CategoryRepo interface {
 		Create(ctx context.Context, qe repository.Querier, category *entity.Category) (*entity.Category, error)
+		Update(ctx context.Context, qe repository.Querier, id int, category *entity.CategoryUpdate) (*entity.Category, error) 
 	}
 )
 

@@ -11,8 +11,8 @@ import (
 	ht "github.com/ogen-go/ogen/http"
 )
 
-func encodeV1AdminCategoriesPostRequest(
-	req *CategoryInput,
+func encodeV1AdminCategoriesCategoryIDPutRequest(
+	req *CategoryPut,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -25,8 +25,8 @@ func encodeV1AdminCategoriesPostRequest(
 	return nil
 }
 
-func encodeV1AdminCategoriesPutRequest(
-	req *CategoryInput,
+func encodeV1AdminCategoriesPostRequest(
+	req *CategoryPost,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"

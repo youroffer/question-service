@@ -15,3 +15,12 @@ func (c *Category) CategoryToApi() *api.Category {
 		Public: c.Public,
 	}
 }
+
+type CategoryUpdate struct {
+	Title  Optional[string] `json:"title"`
+	Public Optional[bool]   `json:"public"`
+}
+
+func (c *CategoryUpdate) IsSet() bool {
+	return c.Title.Set || c.Public.Set
+}

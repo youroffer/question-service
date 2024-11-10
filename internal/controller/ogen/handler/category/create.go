@@ -10,9 +10,10 @@ import (
 	"github.com/himmel520/question-service/internal/infrastructure/repository/repoerr"
 )
 
-func (h *Handler) V1AdminCategoriesPost(ctx context.Context, req *api.CategoryInput) (api.V1AdminCategoriesPostRes, error){
+func (h *Handler) V1AdminCategoriesPost(ctx context.Context, req *api.CategoryPost) (api.V1AdminCategoriesPostRes, error){
 	newCategory, err := h.uc.Create(ctx, &entity.Category{
 		Title: req.GetTitle(),
+		Public: req.GetPublic(),
 	})
 
 	// TODO: добавить обработку ошибок

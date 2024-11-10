@@ -40,6 +40,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.notFound(w, r)
 		return
 	}
+	args := [1]string{}
 
 	// Static code generated router with unwrapped path search.
 	switch {
@@ -57,21 +58,50 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if len(elem) == 0 {
-				// Leaf node.
 				switch r.Method {
-				case "DELETE":
-					s.handleV1AdminCategoriesDeleteRequest([0]string{}, elemIsEscaped, w, r)
 				case "GET":
 					s.handleV1AdminCategoriesGetRequest([0]string{}, elemIsEscaped, w, r)
 				case "POST":
 					s.handleV1AdminCategoriesPostRequest([0]string{}, elemIsEscaped, w, r)
-				case "PUT":
-					s.handleV1AdminCategoriesPutRequest([0]string{}, elemIsEscaped, w, r)
 				default:
-					s.notAllowed(w, r, "DELETE,GET,POST,PUT")
+					s.notAllowed(w, r, "GET,POST")
 				}
 
 				return
+			}
+			switch elem[0] {
+			case '/': // Prefix: "/"
+				origElem := elem
+				if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				// Param: "categoryID"
+				// Leaf parameter
+				args[0] = elem
+				elem = ""
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "DELETE":
+						s.handleV1AdminCategoriesCategoryIDDeleteRequest([1]string{
+							args[0],
+						}, elemIsEscaped, w, r)
+					case "PUT":
+						s.handleV1AdminCategoriesCategoryIDPutRequest([1]string{
+							args[0],
+						}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "DELETE,PUT")
+					}
+
+					return
+				}
+
+				elem = origElem
 			}
 
 			elem = origElem
@@ -87,7 +117,7 @@ type Route struct {
 	operationID string
 	pathPattern string
 	count       int
-	args        [0]string
+	args        [1]string
 }
 
 // Name returns ogen operation name.
@@ -164,16 +194,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			}
 
 			if len(elem) == 0 {
-				// Leaf node.
 				switch method {
-				case "DELETE":
-					r.name = "V1AdminCategoriesDelete"
-					r.summary = "Удаление категории"
-					r.operationID = ""
-					r.pathPattern = "/v1/admin/categories"
-					r.args = args
-					r.count = 0
-					return r, true
 				case "GET":
 					r.name = "V1AdminCategoriesGet"
 					r.summary = "Получить все категории"
@@ -190,17 +211,49 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					r.args = args
 					r.count = 0
 					return r, true
-				case "PUT":
-					r.name = "V1AdminCategoriesPut"
-					r.summary = "Обновить категорию"
-					r.operationID = ""
-					r.pathPattern = "/v1/admin/categories"
-					r.args = args
-					r.count = 0
-					return r, true
 				default:
 					return
 				}
+			}
+			switch elem[0] {
+			case '/': // Prefix: "/"
+				origElem := elem
+				if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				// Param: "categoryID"
+				// Leaf parameter
+				args[0] = elem
+				elem = ""
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch method {
+					case "DELETE":
+						r.name = "V1AdminCategoriesCategoryIDDelete"
+						r.summary = "Удаление категории"
+						r.operationID = ""
+						r.pathPattern = "/v1/admin/categories/{categoryID}"
+						r.args = args
+						r.count = 1
+						return r, true
+					case "PUT":
+						r.name = "V1AdminCategoriesCategoryIDPut"
+						r.summary = "Обновить категорию"
+						r.operationID = ""
+						r.pathPattern = "/v1/admin/categories/{categoryID}"
+						r.args = args
+						r.count = 1
+						return r, true
+					default:
+						return
+					}
+				}
+
+				elem = origElem
 			}
 
 			elem = origElem

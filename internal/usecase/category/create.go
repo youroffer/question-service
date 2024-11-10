@@ -6,6 +6,6 @@ import (
 	"github.com/himmel520/question-service/internal/entity"
 )
 
-func(c *CategoryUC) Create(ctx context.Context, category *entity.Category) (*entity.Category, error){
-	return c.repo.Create(ctx, c.db.DB(), category)
+func(uc *CategoryUC) Create(ctx context.Context, category *entity.Category) (*entity.Category, error){
+	return uc.repo.Create(ctx, uc.db.DB(), category)
 }

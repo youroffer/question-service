@@ -19,19 +19,19 @@ import (
 	"github.com/ogen-go/ogen/ogenerrors"
 )
 
-// handleV1AdminCategoriesDeleteRequest handles DELETE /v1/admin/categories operation.
+// handleV1AdminCategoriesCategoryIDDeleteRequest handles DELETE /v1/admin/categories/{categoryID} operation.
 //
 // Удаляет категорию по ее уникальному идентификатору.
 //
-// DELETE /v1/admin/categories
-func (s *Server) handleV1AdminCategoriesDeleteRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+// DELETE /v1/admin/categories/{categoryID}
+func (s *Server) handleV1AdminCategoriesCategoryIDDeleteRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		semconv.HTTPRequestMethodKey.String("DELETE"),
-		semconv.HTTPRouteKey.String("/v1/admin/categories"),
+		semconv.HTTPRouteKey.String("/v1/admin/categories/{categoryID}"),
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1AdminCategoriesDelete",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1AdminCategoriesCategoryIDDelete",
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -62,7 +62,7 @@ func (s *Server) handleV1AdminCategoriesDeleteRequest(args [0]string, argsEscape
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1AdminCategoriesDelete",
+			Name: "V1AdminCategoriesCategoryIDDelete",
 			ID:   "",
 		}
 	)
@@ -70,7 +70,7 @@ func (s *Server) handleV1AdminCategoriesDeleteRequest(args [0]string, argsEscape
 		type bitset = [1]uint8
 		var satisfied bitset
 		{
-			sctx, ok, err := s.securityBearerAuth(ctx, "V1AdminCategoriesDelete", r)
+			sctx, ok, err := s.securityBearerAuth(ctx, "V1AdminCategoriesCategoryIDDelete", r)
 			if err != nil {
 				err = &ogenerrors.SecurityError{
 					OperationContext: opErrContext,
@@ -112,7 +112,7 @@ func (s *Server) handleV1AdminCategoriesDeleteRequest(args [0]string, argsEscape
 			return
 		}
 	}
-	params, err := decodeV1AdminCategoriesDeleteParams(args, argsEscaped, r)
+	params, err := decodeV1AdminCategoriesCategoryIDDeleteParams(args, argsEscaped, r)
 	if err != nil {
 		err = &ogenerrors.DecodeParamsError{
 			OperationContext: opErrContext,
@@ -123,27 +123,27 @@ func (s *Server) handleV1AdminCategoriesDeleteRequest(args [0]string, argsEscape
 		return
 	}
 
-	var response V1AdminCategoriesDeleteRes
+	var response V1AdminCategoriesCategoryIDDeleteRes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1AdminCategoriesDelete",
+			OperationName:    "V1AdminCategoriesCategoryIDDelete",
 			OperationSummary: "Удаление категории",
 			OperationID:      "",
 			Body:             nil,
 			Params: middleware.Parameters{
 				{
-					Name: "id",
+					Name: "categoryID",
 					In:   "path",
-				}: params.ID,
+				}: params.CategoryID,
 			},
 			Raw: r,
 		}
 
 		type (
 			Request  = struct{}
-			Params   = V1AdminCategoriesDeleteParams
-			Response = V1AdminCategoriesDeleteRes
+			Params   = V1AdminCategoriesCategoryIDDeleteParams
+			Response = V1AdminCategoriesCategoryIDDeleteRes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -152,14 +152,14 @@ func (s *Server) handleV1AdminCategoriesDeleteRequest(args [0]string, argsEscape
 		](
 			m,
 			mreq,
-			unpackV1AdminCategoriesDeleteParams,
+			unpackV1AdminCategoriesCategoryIDDeleteParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.V1AdminCategoriesDelete(ctx, params)
+				response, err = s.h.V1AdminCategoriesCategoryIDDelete(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.V1AdminCategoriesDelete(ctx, params)
+		response, err = s.h.V1AdminCategoriesCategoryIDDelete(ctx, params)
 	}
 	if err != nil {
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -178,7 +178,190 @@ func (s *Server) handleV1AdminCategoriesDeleteRequest(args [0]string, argsEscape
 		return
 	}
 
-	if err := encodeV1AdminCategoriesDeleteResponse(response, w, span); err != nil {
+	if err := encodeV1AdminCategoriesCategoryIDDeleteResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleV1AdminCategoriesCategoryIDPutRequest handles PUT /v1/admin/categories/{categoryID} operation.
+//
+// Обновляет категорию.
+//
+// PUT /v1/admin/categories/{categoryID}
+func (s *Server) handleV1AdminCategoriesCategoryIDPutRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		semconv.HTTPRequestMethodKey.String("PUT"),
+		semconv.HTTPRouteKey.String("/v1/admin/categories/{categoryID}"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1AdminCategoriesCategoryIDPut",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "V1AdminCategoriesCategoryIDPut",
+			ID:   "",
+		}
+	)
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			sctx, ok, err := s.securityBearerAuth(ctx, "V1AdminCategoriesCategoryIDPut", r)
+			if err != nil {
+				err = &ogenerrors.SecurityError{
+					OperationContext: opErrContext,
+					Security:         "BearerAuth",
+					Err:              err,
+				}
+				if encodeErr := encodeErrorResponse(s.h.NewError(ctx, err), w, span); encodeErr != nil {
+					defer recordError("Security:BearerAuth", err)
+				}
+				return
+			}
+			if ok {
+				satisfied[0] |= 1 << 0
+				ctx = sctx
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			err = &ogenerrors.SecurityError{
+				OperationContext: opErrContext,
+				Err:              ogenerrors.ErrSecurityRequirementIsNotSatisfied,
+			}
+			if encodeErr := encodeErrorResponse(s.h.NewError(ctx, err), w, span); encodeErr != nil {
+				defer recordError("Security", err)
+			}
+			return
+		}
+	}
+	params, err := decodeV1AdminCategoriesCategoryIDPutParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	request, close, err := s.decodeV1AdminCategoriesCategoryIDPutRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response V1AdminCategoriesCategoryIDPutRes
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "V1AdminCategoriesCategoryIDPut",
+			OperationSummary: "Обновить категорию",
+			OperationID:      "",
+			Body:             request,
+			Params: middleware.Parameters{
+				{
+					Name: "categoryID",
+					In:   "path",
+				}: params.CategoryID,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = *CategoryPut
+			Params   = V1AdminCategoriesCategoryIDPutParams
+			Response = V1AdminCategoriesCategoryIDPutRes
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackV1AdminCategoriesCategoryIDPutParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.V1AdminCategoriesCategoryIDPut(ctx, request, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.V1AdminCategoriesCategoryIDPut(ctx, request, params)
+	}
+	if err != nil {
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
+		return
+	}
+
+	if err := encodeV1AdminCategoriesCategoryIDPutResponse(response, w, span); err != nil {
 		defer recordError("EncodeResponse", err)
 		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
@@ -482,7 +665,7 @@ func (s *Server) handleV1AdminCategoriesPostRequest(args [0]string, argsEscaped 
 		}
 
 		type (
-			Request  = *CategoryInput
+			Request  = *CategoryPost
 			Params   = struct{}
 			Response = V1AdminCategoriesPostRes
 		)
@@ -520,174 +703,6 @@ func (s *Server) handleV1AdminCategoriesPostRequest(args [0]string, argsEscaped 
 	}
 
 	if err := encodeV1AdminCategoriesPostResponse(response, w, span); err != nil {
-		defer recordError("EncodeResponse", err)
-		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
-			s.cfg.ErrorHandler(ctx, w, r, err)
-		}
-		return
-	}
-}
-
-// handleV1AdminCategoriesPutRequest handles PUT /v1/admin/categories operation.
-//
-// Обновляет категорию.
-//
-// PUT /v1/admin/categories
-func (s *Server) handleV1AdminCategoriesPutRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
-	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("PUT"),
-		semconv.HTTPRouteKey.String("/v1/admin/categories"),
-	}
-
-	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1AdminCategoriesPut",
-		trace.WithAttributes(otelAttrs...),
-		serverSpanKind,
-	)
-	defer span.End()
-
-	// Add Labeler to context.
-	labeler := &Labeler{attrs: otelAttrs}
-	ctx = contextWithLabeler(ctx, labeler)
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		elapsedDuration := time.Since(startTime)
-		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
-
-		// Increment request counter.
-		s.requests.Add(ctx, 1, attrOpt)
-
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
-	}()
-
-	var (
-		recordError = func(stage string, err error) {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
-		}
-		err          error
-		opErrContext = ogenerrors.OperationContext{
-			Name: "V1AdminCategoriesPut",
-			ID:   "",
-		}
-	)
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			sctx, ok, err := s.securityBearerAuth(ctx, "V1AdminCategoriesPut", r)
-			if err != nil {
-				err = &ogenerrors.SecurityError{
-					OperationContext: opErrContext,
-					Security:         "BearerAuth",
-					Err:              err,
-				}
-				if encodeErr := encodeErrorResponse(s.h.NewError(ctx, err), w, span); encodeErr != nil {
-					defer recordError("Security:BearerAuth", err)
-				}
-				return
-			}
-			if ok {
-				satisfied[0] |= 1 << 0
-				ctx = sctx
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			err = &ogenerrors.SecurityError{
-				OperationContext: opErrContext,
-				Err:              ogenerrors.ErrSecurityRequirementIsNotSatisfied,
-			}
-			if encodeErr := encodeErrorResponse(s.h.NewError(ctx, err), w, span); encodeErr != nil {
-				defer recordError("Security", err)
-			}
-			return
-		}
-	}
-	request, close, err := s.decodeV1AdminCategoriesPutRequest(r)
-	if err != nil {
-		err = &ogenerrors.DecodeRequestError{
-			OperationContext: opErrContext,
-			Err:              err,
-		}
-		defer recordError("DecodeRequest", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
-		return
-	}
-	defer func() {
-		if err := close(); err != nil {
-			recordError("CloseRequest", err)
-		}
-	}()
-
-	var response V1AdminCategoriesPutRes
-	if m := s.cfg.Middleware; m != nil {
-		mreq := middleware.Request{
-			Context:          ctx,
-			OperationName:    "V1AdminCategoriesPut",
-			OperationSummary: "Обновить категорию",
-			OperationID:      "",
-			Body:             request,
-			Params:           middleware.Parameters{},
-			Raw:              r,
-		}
-
-		type (
-			Request  = *CategoryInput
-			Params   = struct{}
-			Response = V1AdminCategoriesPutRes
-		)
-		response, err = middleware.HookMiddleware[
-			Request,
-			Params,
-			Response,
-		](
-			m,
-			mreq,
-			nil,
-			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.V1AdminCategoriesPut(ctx, request)
-				return response, err
-			},
-		)
-	} else {
-		response, err = s.h.V1AdminCategoriesPut(ctx, request)
-	}
-	if err != nil {
-		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			if err := encodeErrorResponse(errRes, w, span); err != nil {
-				defer recordError("Internal", err)
-			}
-			return
-		}
-		if errors.Is(err, ht.ErrNotImplemented) {
-			s.cfg.ErrorHandler(ctx, w, r, err)
-			return
-		}
-		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
-			defer recordError("Internal", err)
-		}
-		return
-	}
-
-	if err := encodeV1AdminCategoriesPutResponse(response, w, span); err != nil {
 		defer recordError("EncodeResponse", err)
 		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
 			s.cfg.ErrorHandler(ctx, w, r, err)

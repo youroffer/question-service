@@ -23,12 +23,18 @@ import (
 
 // Invoker invokes operations described by OpenAPI v3 specification.
 type Invoker interface {
-	// V1AdminCategoriesDelete invokes DELETE /v1/admin/categories operation.
+	// V1AdminCategoriesCategoryIDDelete invokes DELETE /v1/admin/categories/{categoryID} operation.
 	//
 	// Удаляет категорию по ее уникальному идентификатору.
 	//
-	// DELETE /v1/admin/categories
-	V1AdminCategoriesDelete(ctx context.Context, params V1AdminCategoriesDeleteParams) (V1AdminCategoriesDeleteRes, error)
+	// DELETE /v1/admin/categories/{categoryID}
+	V1AdminCategoriesCategoryIDDelete(ctx context.Context, params V1AdminCategoriesCategoryIDDeleteParams) (V1AdminCategoriesCategoryIDDeleteRes, error)
+	// V1AdminCategoriesCategoryIDPut invokes PUT /v1/admin/categories/{categoryID} operation.
+	//
+	// Обновляет категорию.
+	//
+	// PUT /v1/admin/categories/{categoryID}
+	V1AdminCategoriesCategoryIDPut(ctx context.Context, request *CategoryPut, params V1AdminCategoriesCategoryIDPutParams) (V1AdminCategoriesCategoryIDPutRes, error)
 	// V1AdminCategoriesGet invokes GET /v1/admin/categories operation.
 	//
 	// Возвращает список всех категорий с возможностью
@@ -41,13 +47,7 @@ type Invoker interface {
 	// Создает новую категорию.
 	//
 	// POST /v1/admin/categories
-	V1AdminCategoriesPost(ctx context.Context, request *CategoryInput) (V1AdminCategoriesPostRes, error)
-	// V1AdminCategoriesPut invokes PUT /v1/admin/categories operation.
-	//
-	// Обновляет категорию.
-	//
-	// PUT /v1/admin/categories
-	V1AdminCategoriesPut(ctx context.Context, request *CategoryInput) (V1AdminCategoriesPutRes, error)
+	V1AdminCategoriesPost(ctx context.Context, request *CategoryPost) (V1AdminCategoriesPostRes, error)
 }
 
 // Client implements OAS client.
@@ -104,20 +104,20 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 	return u
 }
 
-// V1AdminCategoriesDelete invokes DELETE /v1/admin/categories operation.
+// V1AdminCategoriesCategoryIDDelete invokes DELETE /v1/admin/categories/{categoryID} operation.
 //
 // Удаляет категорию по ее уникальному идентификатору.
 //
-// DELETE /v1/admin/categories
-func (c *Client) V1AdminCategoriesDelete(ctx context.Context, params V1AdminCategoriesDeleteParams) (V1AdminCategoriesDeleteRes, error) {
-	res, err := c.sendV1AdminCategoriesDelete(ctx, params)
+// DELETE /v1/admin/categories/{categoryID}
+func (c *Client) V1AdminCategoriesCategoryIDDelete(ctx context.Context, params V1AdminCategoriesCategoryIDDeleteParams) (V1AdminCategoriesCategoryIDDeleteRes, error) {
+	res, err := c.sendV1AdminCategoriesCategoryIDDelete(ctx, params)
 	return res, err
 }
 
-func (c *Client) sendV1AdminCategoriesDelete(ctx context.Context, params V1AdminCategoriesDeleteParams) (res V1AdminCategoriesDeleteRes, err error) {
+func (c *Client) sendV1AdminCategoriesCategoryIDDelete(ctx context.Context, params V1AdminCategoriesCategoryIDDeleteParams) (res V1AdminCategoriesCategoryIDDeleteRes, err error) {
 	otelAttrs := []attribute.KeyValue{
 		semconv.HTTPRequestMethodKey.String("DELETE"),
-		semconv.HTTPRouteKey.String("/v1/admin/categories"),
+		semconv.HTTPRouteKey.String("/v1/admin/categories/{categoryID}"),
 	}
 
 	// Run stopwatch.
@@ -132,7 +132,7 @@ func (c *Client) sendV1AdminCategoriesDelete(ctx context.Context, params V1Admin
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1AdminCategoriesDelete",
+	ctx, span := c.cfg.Tracer.Start(ctx, "V1AdminCategoriesCategoryIDDelete",
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -149,8 +149,26 @@ func (c *Client) sendV1AdminCategoriesDelete(ctx context.Context, params V1Admin
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [1]string
-	pathParts[0] = "/v1/admin/categories"
+	var pathParts [2]string
+	pathParts[0] = "/v1/admin/categories/"
+	{
+		// Encode "categoryID" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "categoryID",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.CategoryID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
 	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeRequest"
@@ -164,7 +182,7 @@ func (c *Client) sendV1AdminCategoriesDelete(ctx context.Context, params V1Admin
 		var satisfied bitset
 		{
 			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, "V1AdminCategoriesDelete", r); {
+			switch err := c.securityBearerAuth(ctx, "V1AdminCategoriesCategoryIDDelete", r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
@@ -200,7 +218,132 @@ func (c *Client) sendV1AdminCategoriesDelete(ctx context.Context, params V1Admin
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeV1AdminCategoriesDeleteResponse(resp)
+	result, err := decodeV1AdminCategoriesCategoryIDDeleteResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// V1AdminCategoriesCategoryIDPut invokes PUT /v1/admin/categories/{categoryID} operation.
+//
+// Обновляет категорию.
+//
+// PUT /v1/admin/categories/{categoryID}
+func (c *Client) V1AdminCategoriesCategoryIDPut(ctx context.Context, request *CategoryPut, params V1AdminCategoriesCategoryIDPutParams) (V1AdminCategoriesCategoryIDPutRes, error) {
+	res, err := c.sendV1AdminCategoriesCategoryIDPut(ctx, request, params)
+	return res, err
+}
+
+func (c *Client) sendV1AdminCategoriesCategoryIDPut(ctx context.Context, request *CategoryPut, params V1AdminCategoriesCategoryIDPutParams) (res V1AdminCategoriesCategoryIDPutRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		semconv.HTTPRequestMethodKey.String("PUT"),
+		semconv.HTTPRouteKey.String("/v1/admin/categories/{categoryID}"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "V1AdminCategoriesCategoryIDPut",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/v1/admin/categories/"
+	{
+		// Encode "categoryID" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "categoryID",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.CategoryID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "PUT", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeV1AdminCategoriesCategoryIDPutRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, "V1AdminCategoriesCategoryIDPut", r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeV1AdminCategoriesCategoryIDPutResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -356,12 +499,12 @@ func (c *Client) sendV1AdminCategoriesGet(ctx context.Context, params V1AdminCat
 // Создает новую категорию.
 //
 // POST /v1/admin/categories
-func (c *Client) V1AdminCategoriesPost(ctx context.Context, request *CategoryInput) (V1AdminCategoriesPostRes, error) {
+func (c *Client) V1AdminCategoriesPost(ctx context.Context, request *CategoryPost) (V1AdminCategoriesPostRes, error) {
 	res, err := c.sendV1AdminCategoriesPost(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendV1AdminCategoriesPost(ctx context.Context, request *CategoryInput) (res V1AdminCategoriesPostRes, err error) {
+func (c *Client) sendV1AdminCategoriesPost(ctx context.Context, request *CategoryPost) (res V1AdminCategoriesPostRes, err error) {
 	otelAttrs := []attribute.KeyValue{
 		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/v1/admin/categories"),
@@ -451,113 +594,6 @@ func (c *Client) sendV1AdminCategoriesPost(ctx context.Context, request *Categor
 
 	stage = "DecodeResponse"
 	result, err := decodeV1AdminCategoriesPostResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// V1AdminCategoriesPut invokes PUT /v1/admin/categories operation.
-//
-// Обновляет категорию.
-//
-// PUT /v1/admin/categories
-func (c *Client) V1AdminCategoriesPut(ctx context.Context, request *CategoryInput) (V1AdminCategoriesPutRes, error) {
-	res, err := c.sendV1AdminCategoriesPut(ctx, request)
-	return res, err
-}
-
-func (c *Client) sendV1AdminCategoriesPut(ctx context.Context, request *CategoryInput) (res V1AdminCategoriesPutRes, err error) {
-	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("PUT"),
-		semconv.HTTPRouteKey.String("/v1/admin/categories"),
-	}
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
-
-	// Increment request counter.
-	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-
-	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1AdminCategoriesPut",
-		trace.WithAttributes(otelAttrs...),
-		clientSpanKind,
-	)
-	// Track stage for error reporting.
-	var stage string
-	defer func() {
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-		}
-		span.End()
-	}()
-
-	stage = "BuildURL"
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [1]string
-	pathParts[0] = "/v1/admin/categories"
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "PUT", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-	if err := encodeV1AdminCategoriesPutRequest(request, r); err != nil {
-		return res, errors.Wrap(err, "encode request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, "V1AdminCategoriesPut", r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	stage = "SendRequest"
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	stage = "DecodeResponse"
-	result, err := decodeV1AdminCategoriesPutResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

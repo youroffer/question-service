@@ -15,8 +15,8 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func (s *Server) decodeV1AdminCategoriesPostRequest(r *http.Request) (
-	req *CategoryInput,
+func (s *Server) decodeV1AdminCategoriesCategoryIDPutRequest(r *http.Request) (
+	req *CategoryPut,
 	close func() error,
 	rerr error,
 ) {
@@ -55,7 +55,7 @@ func (s *Server) decodeV1AdminCategoriesPostRequest(r *http.Request) (
 
 		d := jx.DecodeBytes(buf)
 
-		var request CategoryInput
+		var request CategoryPut
 		if err := func() error {
 			if err := request.Decode(d); err != nil {
 				return err
@@ -86,8 +86,8 @@ func (s *Server) decodeV1AdminCategoriesPostRequest(r *http.Request) (
 	}
 }
 
-func (s *Server) decodeV1AdminCategoriesPutRequest(r *http.Request) (
-	req *CategoryInput,
+func (s *Server) decodeV1AdminCategoriesPostRequest(r *http.Request) (
+	req *CategoryPost,
 	close func() error,
 	rerr error,
 ) {
@@ -126,7 +126,7 @@ func (s *Server) decodeV1AdminCategoriesPutRequest(r *http.Request) (
 
 		d := jx.DecodeBytes(buf)
 
-		var request CategoryInput
+		var request CategoryPost
 		if err := func() error {
 			if err := request.Decode(d); err != nil {
 				return err

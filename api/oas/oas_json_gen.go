@@ -13,14 +13,14 @@ import (
 )
 
 // Encode implements json.Marshaler.
-func (s *CategoriesResponse) Encode(e *jx.Encoder) {
+func (s *CategoriesResp) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CategoriesResponse) encodeFields(e *jx.Encoder) {
+func (s *CategoriesResp) encodeFields(e *jx.Encoder) {
 	{
 		e.FieldStart("data")
 		e.ArrStart()
@@ -43,17 +43,17 @@ func (s *CategoriesResponse) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfCategoriesResponse = [4]string{
+var jsonFieldsNameOfCategoriesResp = [4]string{
 	0: "data",
 	1: "page",
 	2: "pages",
 	3: "per_page",
 }
 
-// Decode decodes CategoriesResponse from json.
-func (s *CategoriesResponse) Decode(d *jx.Decoder) error {
+// Decode decodes CategoriesResp from json.
+func (s *CategoriesResp) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CategoriesResponse to nil")
+		return errors.New("invalid: unable to decode CategoriesResp to nil")
 	}
 	var requiredBitSet [1]uint8
 
@@ -118,7 +118,7 @@ func (s *CategoriesResponse) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode CategoriesResponse")
+		return errors.Wrap(err, "decode CategoriesResp")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
@@ -135,8 +135,8 @@ func (s *CategoriesResponse) Decode(d *jx.Decoder) error {
 				bitIdx := bits.TrailingZeros8(result)
 				fieldIdx := i*8 + bitIdx
 				var name string
-				if fieldIdx < len(jsonFieldsNameOfCategoriesResponse) {
-					name = jsonFieldsNameOfCategoriesResponse[fieldIdx]
+				if fieldIdx < len(jsonFieldsNameOfCategoriesResp) {
+					name = jsonFieldsNameOfCategoriesResp[fieldIdx]
 				} else {
 					name = strconv.Itoa(fieldIdx)
 				}
@@ -157,14 +157,14 @@ func (s *CategoriesResponse) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CategoriesResponse) MarshalJSON() ([]byte, error) {
+func (s *CategoriesResp) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CategoriesResponse) UnmarshalJSON(data []byte) error {
+func (s *CategoriesResp) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -300,14 +300,14 @@ func (s *Category) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
-func (s *CategoryInput) Encode(e *jx.Encoder) {
+func (s *CategoryPost) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CategoryInput) encodeFields(e *jx.Encoder) {
+func (s *CategoryPost) encodeFields(e *jx.Encoder) {
 	{
 		e.FieldStart("title")
 		e.Str(s.Title)
@@ -318,15 +318,15 @@ func (s *CategoryInput) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfCategoryInput = [2]string{
+var jsonFieldsNameOfCategoryPost = [2]string{
 	0: "title",
 	1: "public",
 }
 
-// Decode decodes CategoryInput from json.
-func (s *CategoryInput) Decode(d *jx.Decoder) error {
+// Decode decodes CategoryPost from json.
+func (s *CategoryPost) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CategoryInput to nil")
+		return errors.New("invalid: unable to decode CategoryPost to nil")
 	}
 	var requiredBitSet [1]uint8
 
@@ -361,7 +361,7 @@ func (s *CategoryInput) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode CategoryInput")
+		return errors.Wrap(err, "decode CategoryPost")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
@@ -378,8 +378,8 @@ func (s *CategoryInput) Decode(d *jx.Decoder) error {
 				bitIdx := bits.TrailingZeros8(result)
 				fieldIdx := i*8 + bitIdx
 				var name string
-				if fieldIdx < len(jsonFieldsNameOfCategoryInput) {
-					name = jsonFieldsNameOfCategoryInput[fieldIdx]
+				if fieldIdx < len(jsonFieldsNameOfCategoryPost) {
+					name = jsonFieldsNameOfCategoryPost[fieldIdx]
 				} else {
 					name = strconv.Itoa(fieldIdx)
 				}
@@ -400,14 +400,94 @@ func (s *CategoryInput) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CategoryInput) MarshalJSON() ([]byte, error) {
+func (s *CategoryPost) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CategoryInput) UnmarshalJSON(data []byte) error {
+func (s *CategoryPost) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CategoryPut) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CategoryPut) encodeFields(e *jx.Encoder) {
+	{
+		if s.Title.Set {
+			e.FieldStart("title")
+			s.Title.Encode(e)
+		}
+	}
+	{
+		if s.Public.Set {
+			e.FieldStart("public")
+			s.Public.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCategoryPut = [2]string{
+	0: "title",
+	1: "public",
+}
+
+// Decode decodes CategoryPut from json.
+func (s *CategoryPut) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CategoryPut to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "title":
+			if err := func() error {
+				s.Title.Reset()
+				if err := s.Title.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"title\"")
+			}
+		case "public":
+			if err := func() error {
+				s.Public.Reset()
+				if err := s.Public.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"public\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CategoryPut")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CategoryPut) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CategoryPut) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -581,93 +661,87 @@ func (s *ErrorDetails) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes V1AdminCategoriesDeleteConflict as json.
-func (s *V1AdminCategoriesDeleteConflict) Encode(e *jx.Encoder) {
-	unwrapped := (*Error)(s)
-
-	unwrapped.Encode(e)
+// Encode encodes bool as json.
+func (o OptBool) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Bool(bool(o.Value))
 }
 
-// Decode decodes V1AdminCategoriesDeleteConflict from json.
-func (s *V1AdminCategoriesDeleteConflict) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode V1AdminCategoriesDeleteConflict to nil")
+// Decode decodes bool from json.
+func (o *OptBool) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptBool to nil")
 	}
-	var unwrapped Error
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
+	o.Set = true
+	v, err := d.Bool()
+	if err != nil {
+		return err
 	}
-	*s = V1AdminCategoriesDeleteConflict(unwrapped)
+	o.Value = bool(v)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *V1AdminCategoriesDeleteConflict) MarshalJSON() ([]byte, error) {
+func (s OptBool) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *V1AdminCategoriesDeleteConflict) UnmarshalJSON(data []byte) error {
+func (s *OptBool) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes V1AdminCategoriesDeleteNotFound as json.
-func (s *V1AdminCategoriesDeleteNotFound) Encode(e *jx.Encoder) {
-	unwrapped := (*Error)(s)
-
-	unwrapped.Encode(e)
+// Encode encodes string as json.
+func (o OptString) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
 }
 
-// Decode decodes V1AdminCategoriesDeleteNotFound from json.
-func (s *V1AdminCategoriesDeleteNotFound) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode V1AdminCategoriesDeleteNotFound to nil")
+// Decode decodes string from json.
+func (o *OptString) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptString to nil")
 	}
-	var unwrapped Error
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
+	o.Set = true
+	v, err := d.Str()
+	if err != nil {
+		return err
 	}
-	*s = V1AdminCategoriesDeleteNotFound(unwrapped)
+	o.Value = string(v)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *V1AdminCategoriesDeleteNotFound) MarshalJSON() ([]byte, error) {
+func (s OptString) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *V1AdminCategoriesDeleteNotFound) UnmarshalJSON(data []byte) error {
+func (s *OptString) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes V1AdminCategoriesDeleteUnauthorized as json.
-func (s *V1AdminCategoriesDeleteUnauthorized) Encode(e *jx.Encoder) {
+// Encode encodes V1AdminCategoriesCategoryIDDeleteConflict as json.
+func (s *V1AdminCategoriesCategoryIDDeleteConflict) Encode(e *jx.Encoder) {
 	unwrapped := (*Error)(s)
 
 	unwrapped.Encode(e)
 }
 
-// Decode decodes V1AdminCategoriesDeleteUnauthorized from json.
-func (s *V1AdminCategoriesDeleteUnauthorized) Decode(d *jx.Decoder) error {
+// Decode decodes V1AdminCategoriesCategoryIDDeleteConflict from json.
+func (s *V1AdminCategoriesCategoryIDDeleteConflict) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode V1AdminCategoriesDeleteUnauthorized to nil")
+		return errors.New("invalid: unable to decode V1AdminCategoriesCategoryIDDeleteConflict to nil")
 	}
 	var unwrapped Error
 	if err := func() error {
@@ -678,19 +752,247 @@ func (s *V1AdminCategoriesDeleteUnauthorized) Decode(d *jx.Decoder) error {
 	}(); err != nil {
 		return errors.Wrap(err, "alias")
 	}
-	*s = V1AdminCategoriesDeleteUnauthorized(unwrapped)
+	*s = V1AdminCategoriesCategoryIDDeleteConflict(unwrapped)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *V1AdminCategoriesDeleteUnauthorized) MarshalJSON() ([]byte, error) {
+func (s *V1AdminCategoriesCategoryIDDeleteConflict) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *V1AdminCategoriesDeleteUnauthorized) UnmarshalJSON(data []byte) error {
+func (s *V1AdminCategoriesCategoryIDDeleteConflict) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1AdminCategoriesCategoryIDDeleteNotFound as json.
+func (s *V1AdminCategoriesCategoryIDDeleteNotFound) Encode(e *jx.Encoder) {
+	unwrapped := (*Error)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes V1AdminCategoriesCategoryIDDeleteNotFound from json.
+func (s *V1AdminCategoriesCategoryIDDeleteNotFound) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1AdminCategoriesCategoryIDDeleteNotFound to nil")
+	}
+	var unwrapped Error
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = V1AdminCategoriesCategoryIDDeleteNotFound(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *V1AdminCategoriesCategoryIDDeleteNotFound) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1AdminCategoriesCategoryIDDeleteNotFound) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1AdminCategoriesCategoryIDDeleteUnauthorized as json.
+func (s *V1AdminCategoriesCategoryIDDeleteUnauthorized) Encode(e *jx.Encoder) {
+	unwrapped := (*Error)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes V1AdminCategoriesCategoryIDDeleteUnauthorized from json.
+func (s *V1AdminCategoriesCategoryIDDeleteUnauthorized) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1AdminCategoriesCategoryIDDeleteUnauthorized to nil")
+	}
+	var unwrapped Error
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = V1AdminCategoriesCategoryIDDeleteUnauthorized(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *V1AdminCategoriesCategoryIDDeleteUnauthorized) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1AdminCategoriesCategoryIDDeleteUnauthorized) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1AdminCategoriesCategoryIDPutBadRequest as json.
+func (s *V1AdminCategoriesCategoryIDPutBadRequest) Encode(e *jx.Encoder) {
+	unwrapped := (*Error)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes V1AdminCategoriesCategoryIDPutBadRequest from json.
+func (s *V1AdminCategoriesCategoryIDPutBadRequest) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1AdminCategoriesCategoryIDPutBadRequest to nil")
+	}
+	var unwrapped Error
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = V1AdminCategoriesCategoryIDPutBadRequest(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *V1AdminCategoriesCategoryIDPutBadRequest) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1AdminCategoriesCategoryIDPutBadRequest) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1AdminCategoriesCategoryIDPutConflict as json.
+func (s *V1AdminCategoriesCategoryIDPutConflict) Encode(e *jx.Encoder) {
+	unwrapped := (*Error)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes V1AdminCategoriesCategoryIDPutConflict from json.
+func (s *V1AdminCategoriesCategoryIDPutConflict) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1AdminCategoriesCategoryIDPutConflict to nil")
+	}
+	var unwrapped Error
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = V1AdminCategoriesCategoryIDPutConflict(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *V1AdminCategoriesCategoryIDPutConflict) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1AdminCategoriesCategoryIDPutConflict) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1AdminCategoriesCategoryIDPutNotFound as json.
+func (s *V1AdminCategoriesCategoryIDPutNotFound) Encode(e *jx.Encoder) {
+	unwrapped := (*Error)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes V1AdminCategoriesCategoryIDPutNotFound from json.
+func (s *V1AdminCategoriesCategoryIDPutNotFound) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1AdminCategoriesCategoryIDPutNotFound to nil")
+	}
+	var unwrapped Error
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = V1AdminCategoriesCategoryIDPutNotFound(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *V1AdminCategoriesCategoryIDPutNotFound) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1AdminCategoriesCategoryIDPutNotFound) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes V1AdminCategoriesCategoryIDPutUnauthorized as json.
+func (s *V1AdminCategoriesCategoryIDPutUnauthorized) Encode(e *jx.Encoder) {
+	unwrapped := (*Error)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes V1AdminCategoriesCategoryIDPutUnauthorized from json.
+func (s *V1AdminCategoriesCategoryIDPutUnauthorized) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode V1AdminCategoriesCategoryIDPutUnauthorized to nil")
+	}
+	var unwrapped Error
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = V1AdminCategoriesCategoryIDPutUnauthorized(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *V1AdminCategoriesCategoryIDPutUnauthorized) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *V1AdminCategoriesCategoryIDPutUnauthorized) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -919,158 +1221,6 @@ func (s *V1AdminCategoriesPostUnauthorized) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *V1AdminCategoriesPostUnauthorized) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes V1AdminCategoriesPutBadRequest as json.
-func (s *V1AdminCategoriesPutBadRequest) Encode(e *jx.Encoder) {
-	unwrapped := (*Error)(s)
-
-	unwrapped.Encode(e)
-}
-
-// Decode decodes V1AdminCategoriesPutBadRequest from json.
-func (s *V1AdminCategoriesPutBadRequest) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode V1AdminCategoriesPutBadRequest to nil")
-	}
-	var unwrapped Error
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = V1AdminCategoriesPutBadRequest(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *V1AdminCategoriesPutBadRequest) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *V1AdminCategoriesPutBadRequest) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes V1AdminCategoriesPutConflict as json.
-func (s *V1AdminCategoriesPutConflict) Encode(e *jx.Encoder) {
-	unwrapped := (*Error)(s)
-
-	unwrapped.Encode(e)
-}
-
-// Decode decodes V1AdminCategoriesPutConflict from json.
-func (s *V1AdminCategoriesPutConflict) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode V1AdminCategoriesPutConflict to nil")
-	}
-	var unwrapped Error
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = V1AdminCategoriesPutConflict(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *V1AdminCategoriesPutConflict) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *V1AdminCategoriesPutConflict) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes V1AdminCategoriesPutNotFound as json.
-func (s *V1AdminCategoriesPutNotFound) Encode(e *jx.Encoder) {
-	unwrapped := (*Error)(s)
-
-	unwrapped.Encode(e)
-}
-
-// Decode decodes V1AdminCategoriesPutNotFound from json.
-func (s *V1AdminCategoriesPutNotFound) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode V1AdminCategoriesPutNotFound to nil")
-	}
-	var unwrapped Error
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = V1AdminCategoriesPutNotFound(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *V1AdminCategoriesPutNotFound) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *V1AdminCategoriesPutNotFound) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes V1AdminCategoriesPutUnauthorized as json.
-func (s *V1AdminCategoriesPutUnauthorized) Encode(e *jx.Encoder) {
-	unwrapped := (*Error)(s)
-
-	unwrapped.Encode(e)
-}
-
-// Decode decodes V1AdminCategoriesPutUnauthorized from json.
-func (s *V1AdminCategoriesPutUnauthorized) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode V1AdminCategoriesPutUnauthorized to nil")
-	}
-	var unwrapped Error
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = V1AdminCategoriesPutUnauthorized(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *V1AdminCategoriesPutUnauthorized) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *V1AdminCategoriesPutUnauthorized) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

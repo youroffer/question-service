@@ -30,16 +30,16 @@ func (c *CategoryUpdate) IsSet() bool {
 
 type CategoriesResp struct {
 	Data    []*Category `json:"data"`
-	Page    int        `json:"page"`
-	Pages   int        `json:"pages"`
-	PerPage int        `json:"per_page"`
+	Page    uint64      `json:"page"`
+	Pages   uint64      `json:"pages"`
+	PerPage uint64      `json:"per_page"`
 }
 
-func (c *CategoriesResp) CategoriesRespToApi() *api.CategoriesResp {
+func (c *CategoriesResp) ToApi() *api.CategoriesResp {
 	return &api.CategoriesResp{
-		Data: convert.MapSlice(c.Data, CategoryToApi),
-		Page: c.Page,
-		Pages: c.Pages,
-		PerPage: c.PerPage,
+		Data:    convert.ApplyToSlice(c.Data, CategoryToApi),
+		Page:    int(c.Page),
+		Pages:   int(c.Pages),
+		PerPage: int(c.PerPage),
 	}
 }

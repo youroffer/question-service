@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/himmel520/question-service/internal/entity"
+	"github.com/himmel520/question-service/internal/usecase"
 	"github.com/sirupsen/logrus"
 )
 
@@ -14,6 +15,7 @@ type (
 	}
 
 	CategoryUsecase interface {
+		Get(ctx context.Context, params usecase.PageParams) (*entity.CategoriesResp, error)
 		Create(ctx context.Context, category *entity.Category) (*entity.Category, error)
 		Update(ctx context.Context, id int, category *entity.CategoryUpdate) (*entity.Category, error)
 		Delete(ctx context.Context, id int) error

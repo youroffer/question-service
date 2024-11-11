@@ -6,6 +6,12 @@ import (
 	api "github.com/himmel520/question-service/api/oas"
 )
 
+// Default pagination
+const (
+	Page = 0
+	PerPage = 20
+)
+
 type (
 	Handler struct {
 		Auth
@@ -22,7 +28,10 @@ type (
 	}
 
 	Category interface {
-		V1CategoriesPost(ctx context.Context, req *api.CategoryInput) (api.V1CategoriesPostRes, error)
+		V1AdminCategoriesGet(ctx context.Context, params api.V1AdminCategoriesGetParams) (api.V1AdminCategoriesGetRes, error)
+		V1AdminCategoriesPost(ctx context.Context, req *api.CategoryPost) (api.V1AdminCategoriesPostRes, error)
+		V1AdminCategoriesIDDelete(ctx context.Context, params api.V1AdminCategoriesIDDeleteParams) (api.V1AdminCategoriesIDDeleteRes, error)
+		V1AdminCategoriesIDPut(ctx context.Context, req *api.CategoryPut, params api.V1AdminCategoriesIDPutParams) (api.V1AdminCategoriesIDPutRes, error)
 	}
 )
 

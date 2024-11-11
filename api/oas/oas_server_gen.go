@@ -8,12 +8,31 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
-	// V1CategoriesPost implements POST /v1/categories operation.
+	// V1AdminCategoriesGet implements GET /v1/admin/categories operation.
+	//
+	// Возвращает список всех категорий с возможностью
+	// пагинации.
+	//
+	// GET /v1/admin/categories
+	V1AdminCategoriesGet(ctx context.Context, params V1AdminCategoriesGetParams) (V1AdminCategoriesGetRes, error)
+	// V1AdminCategoriesIDDelete implements DELETE /v1/admin/categories/{id} operation.
+	//
+	// Удаляет категорию по ее уникальному идентификатору.
+	//
+	// DELETE /v1/admin/categories/{id}
+	V1AdminCategoriesIDDelete(ctx context.Context, params V1AdminCategoriesIDDeleteParams) (V1AdminCategoriesIDDeleteRes, error)
+	// V1AdminCategoriesIDPut implements PUT /v1/admin/categories/{id} operation.
+	//
+	// Обновляет категорию.
+	//
+	// PUT /v1/admin/categories/{id}
+	V1AdminCategoriesIDPut(ctx context.Context, req *CategoryPut, params V1AdminCategoriesIDPutParams) (V1AdminCategoriesIDPutRes, error)
+	// V1AdminCategoriesPost implements POST /v1/admin/categories operation.
 	//
 	// Создает новую категорию.
 	//
-	// POST /v1/categories
-	V1CategoriesPost(ctx context.Context, req *CategoryInput) (V1CategoriesPostRes, error)
+	// POST /v1/admin/categories
+	V1AdminCategoriesPost(ctx context.Context, req *CategoryPost) (V1AdminCategoriesPostRes, error)
 	// NewError creates *ErrorStatusCode from error returned by handler.
 	//
 	// Used for common default response.

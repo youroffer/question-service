@@ -29,5 +29,5 @@ func (h *Handler) V1AdminCategoriesIDPut(ctx context.Context, req *api.CategoryP
 		return nil, err
 	}
 
-	return category.CategoryToApi(), nil
+	return entity.CategoryToApi(category), nil
 }

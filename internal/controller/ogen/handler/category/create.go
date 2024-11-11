@@ -4,20 +4,19 @@ import (
 	"context"
 	"errors"
 
-
 	api "github.com/himmel520/question-service/api/oas"
 	"github.com/himmel520/question-service/internal/entity"
 	"github.com/himmel520/question-service/internal/infrastructure/repository/repoerr"
 )
 
-func (h *Handler) V1AdminCategoriesPost(ctx context.Context, req *api.CategoryPost) (api.V1AdminCategoriesPostRes, error){
+func (h *Handler) V1AdminCategoriesPost(ctx context.Context, req *api.CategoryPost) (api.V1AdminCategoriesPostRes, error) {
 	newCategory, err := h.uc.Create(ctx, &entity.Category{
-		Title: req.GetTitle(),
+		Title:  req.GetTitle(),
 		Public: req.GetPublic(),
 	})
 
 	// TODO: добавить обработку ошибок
-	switch{
+	switch {
 	case errors.Is(err, repoerr.ErrCategoryExists):
 		return &api.V1AdminCategoriesPostConflict{Message: err.Error()}, nil
 	case err != nil:
@@ -25,5 +24,5 @@ func (h *Handler) V1AdminCategoriesPost(ctx context.Context, req *api.CategoryPo
 		return nil, err
 	}
 
-	return newCategory.CategoryToApi(), nil
+	return entity.CategoryToApi(newCategory), nil
 }

@@ -14,4 +14,5 @@ var (
 var (
 	ErrCategoryNotFound = errors.New("category not found")
 	ErrCategoryExists   = errors.New("category exists")
+	ErrCategoryDependency = errors.New("cannot delete category, it is linked to posts")
 )

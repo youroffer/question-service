@@ -16,6 +16,7 @@ type (
 	CategoryUsecase interface {
 		Create(ctx context.Context, category *entity.Category) (*entity.Category, error)
 		Update(ctx context.Context, id int, category *entity.CategoryUpdate) (*entity.Category, error)
+		Delete(ctx context.Context, id int) error
 	}
 )
 
